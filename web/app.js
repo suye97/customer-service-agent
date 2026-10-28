@@ -4,6 +4,7 @@ const input = document.querySelector('#question');
 const send = document.querySelector('#send');
 const history = [];
 
+// 创建一条用户或客服消息，返回气泡元素供追加商品卡片。
 function message(text, role, pending = false) {
   const row = document.createElement('div');
   row.className = `message ${role}`;
@@ -16,6 +17,7 @@ function message(text, role, pending = false) {
   return bubble;
 }
 
+// 使用 DOM API 在指定客服气泡内创建商品卡片，避免推荐内容出现在对话框外。
 function showProducts(items, bubble) {
   if (!Array.isArray(items) || items.length === 0) return;
   const list = document.createElement('div');
@@ -26,11 +28,13 @@ function showProducts(items, bubble) {
     card.className = 'product-card';
     const visual = document.createElement('div');
     visual.className = 'product-image';
+    // 仅允许以 https:// 开头的图片地址，避免把其他协议当作商品图片加载。
     if (typeof item.image === 'string' && /^https:\/\//i.test(item.image)) {
       const image = document.createElement('img');
       image.src = item.image;
       image.alt = item.name || '商品图片';
       image.loading = 'lazy';
+      // 图片加载失败时移除图片元素，并显示文字占位。
       image.onerror = () => { image.remove(); visual.textContent = '暂无图片'; };
       visual.appendChild(image);
     } else {
@@ -68,6 +72,7 @@ function showProducts(items, bubble) {
   bubble.appendChild(list);
 }
 
+// 提交用户问题、调用聊天 API，并把回答和商品卡片追加到当前对话。
 async function ask(question) {
   const text = question.trim();
   if (!text || send.disabled) return;
@@ -77,7 +82,7 @@ async function ask(question) {
   message(text, 'user');
   const bubble = message('正在为你查找合适的商品…', 'assistant', true);
   try {
-    const response = await fetch('/api/chat', {
+    const response = await fetch('api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: text, history: previous }),
@@ -98,7 +103,9 @@ async function ask(question) {
   }
 }
 
+// 表单提交时阻止页面刷新，改为发送当前输入的问题。
 form.addEventListener('submit', event => { event.preventDefault(); ask(input.value); });
+// 为每个快捷问题按钮绑定点击事件，点击后直接发送对应问题。
 document.querySelectorAll('[data-question]').forEach(button => {
   button.addEventListener('click', () => ask(button.dataset.question));
 });

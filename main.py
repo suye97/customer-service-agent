@@ -32,21 +32,25 @@ class ChatRequest(BaseModel):
 
 @lru_cache(maxsize=1)
 def get_agent() -> ProductAgent:
+    """创建并缓存商品客服实例，避免每次请求重复初始化。"""
     return ProductAgent()
 
 
 @app.get("/", include_in_schema=False)
 def home():
+    """返回聊天前端首页。"""
     return FileResponse(WEB / "index.html")
 
 
 @app.get("/api/health")
 def health():
+    """返回 FastAPI 进程健康状态。"""
     return {"status": "ok"}
 
 
 @app.post("/api/chat")
 def chat(request: ChatRequest, agent: ProductAgent = Depends(get_agent)):
+    """接收聊天请求并返回客服回答及推荐商品。"""
     history = [turn.model_dump() for turn in request.history if turn.role in ("user", "assistant")]
     try:
         return agent.answer(request.message.strip(), history)

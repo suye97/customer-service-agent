@@ -16,8 +16,25 @@ SYSTEM_PROMPT = """你是电子产品租赁商城的商品顾问。根据用户�
 返回 JSON 对象，格式为 {"answer":"回答内容","product_ids":["商品ID"]}。product_ids 只选确实推荐或比较的候选商品 ID，最多 4 个；回答中只提及这些商品，不能出现候选以外的商品。不要解释检索过程。"""
 
 
+# 提取 iPhone 后的 1～2 位数字代际，允许后面直接连接 Pro 等后缀并忽略大小写。
+IPHONE_GENERATION_RE = re.compile(r"(?<![A-Za-z0-9])iPhone\s*(\d{1,2})(?!\d)", re.IGNORECASE)
+
+
+def iphone_generation(entity: dict[str, Any]) -> int | None:
+    """从商品名称、标题或分类路径中提取 iPhone 数字代际。"""
+    product = entity.get("product") or {}
+    values = [product.get(key) for key in ("name", "itemName", "title")]
+    values.extend(entity.get("category_paths") or [])
+    for value in values:
+        match = IPHONE_GENERATION_RE.search(str(value or ""))
+        if match:
+            return int(match.group(1))
+    return None
+
+
 class ProductAgent:
     def __init__(self, *, milvus: Any = None, embedding_client: Any = None, llm_client: Any = None):
+        """初始化配置及可选的外部客户端测试替身。"""
         self.collection = os.getenv("MILVUS_COLLECTION", "agent_design_kb")
         self.embedding_model = os.getenv("EMBEDDING_MODEL", "text-embedding-v4")
         self.dimension = int(os.getenv("EMBEDDING_DIMENSION", "1024"))
@@ -28,6 +45,7 @@ class ProductAgent:
         self._llm_client = llm_client
 
     def _embedding(self) -> Any:
+        """延迟创建 OpenAI 兼容的 Embedding 客户端。"""
         if self._embedding_client is None:
             api_key = os.getenv("EMBEDDING_API_KEY")
             if not api_key:
@@ -41,6 +59,7 @@ class ProductAgent:
         return self._embedding_client
 
     def _store(self) -> Any:
+        """延迟创建 Milvus 客户端并校验连接配置。"""
         if self._milvus is None:
             uri = os.getenv("SYMBOL_AGENT_MILVUS_URI")
             token = os.getenv("SYMBOL_AGENT_MILVUS_TOKEN")
@@ -50,6 +69,7 @@ class ProductAgent:
         return self._milvus
 
     def _llm(self) -> Any:
+        """延迟创建用于生成客服回答的 OpenAI 兼容 LLM 客户端。"""
         if self._llm_client is None:
             api_key = os.getenv("LLM_API_KEY")
             if not api_key:
@@ -63,6 +83,7 @@ class ProductAgent:
         return self._llm_client
 
     def retrieve(self, question: str, history: list[dict[str, str]]) -> list[dict[str, Any]]:
+        """检索候选商品，并处理明确型号扩展及最新苹果最高代际筛选。"""
         if self.embedding_mock:
             raise RuntimeError("当前为模拟向量，无法进行语义检索。请用真实 embedding 重新导入商品")
         query = question
@@ -89,6 +110,7 @@ class ProductAgent:
         seen = set()
 
         def include(entity: dict[str, Any], product_id: str) -> None:
+            """将符合上架状态且未重复的商品加入候选列表。"""
             product = entity.get("product") or {}
             if not product_id or not isinstance(product, dict) or product_id in seen:
                 return
@@ -100,30 +122,51 @@ class ProductAgent:
         for hit in hits:
             entity = hit.get("entity", {})
             include(entity, str(entity.get("id") or hit.get("id") or ""))
+        # 提取用户明确指定的 iPhone/iPad 数字型号，以及可选的 Pro、Pro Max 等版本。
         model = re.search(r"(?<![A-Za-z0-9])(?:iPhone|iPad)\s*(\d{1,2})(?:\s*(Pro\s*Max|Pro|Plus|Air|mini))?(?![A-Za-z0-9])", query, re.IGNORECASE)
         if model:
             version, variant = model.groups()
             family = model.group(0).split(version)[0].strip()
-            # Product titles have inconsistent whitespace; inspect the small catalog for exact models.
+            # 商品标题中的空格不统一，因此查询小目录以补全明确型号的候选商品。
             prefix = f"{family}{version}"
             rows = store.query(collection_name=self.collection, filter="", output_fields=["id", "product", "category_paths"], limit=16384)
             for row in rows:
                 product = row.get("product") or {}
+                # 删除商品名称中的空白，兼容“iPhone17”和“iPhone 17”等写法。
                 name = re.sub(r"\s+", "", str(product.get("name") or product.get("itemName") or ""))
+                # 对版本名称做同样的空白清理，再核对型号和可选版本。
                 if prefix.lower() in name.lower() and (not variant or re.sub(r"\s+", "", variant).lower() in name.lower()):
+                    include(row, str(row.get("id") or ""))
+        # “最新”识别最新意图，“苹果|iPhone”限定品牌；已有明确型号时不覆盖用户条件。
+        if not model and re.search(r"最新", query) and re.search(r"苹果|iPhone", query, re.IGNORECASE):
+            rows = store.query(collection_name=self.collection, filter="", output_fields=["id", "product", "category_paths"], limit=16384)
+            versioned = [(iphone_generation(row), row) for row in rows if (row.get("product") or {}).get("status") in (None, "", "SHELVES")]
+            latest = max((generation for generation, _ in versioned if generation is not None), default=None)
+            if latest is None:
+                return []
+            products = [row for row in products if iphone_generation(row) == latest]
+            for generation, row in versioned:
+                if generation == latest:
                     include(row, str(row.get("id") or ""))
         return products
 
     def answer(self, question: str, history: list[dict[str, str]]) -> dict[str, Any]:
+        """根据用户条件过滤候选，调用 LLM 生成回答并构造商品卡片。"""
         candidates = self.retrieve(question, history)
+        # 再次从原始问题提取明确型号，用于 LLM 调用前的最终候选过滤。
         model_match = re.search(r"(?<![A-Za-z0-9])(?:iPhone|iPad)\s*(\d{1,2})(?:\s*(Pro\s*Max|Pro|Plus|Air|mini))?(?![A-Za-z0-9])", question, re.IGNORECASE)
         if model_match:
             family = model_match.group(0).split(model_match.group(1))[0].strip()
             prefix = f"{family}{model_match.group(1)}".lower()
+            # 去除版本名称中的空白，统一 Pro Max 等不同书写形式。
             variant = re.sub(r"\s+", "", model_match.group(2) or "").lower()
+            # 去除候选商品名称中的空白后，按型号和可选版本过滤。
             candidates = [row for row in candidates if prefix in re.sub(r"\s+", "", str(row["product"].get("name") or row["product"].get("itemName") or "")).lower() and (not variant or variant in re.sub(r"\s+", "", str(row["product"].get("name") or row["product"].get("itemName") or "")).lower())]
+        # “标准版|普通版”识别只要基础型号的条件，用于排除 Pro 等衍生版本。
         if model_match and not model_match.group(2) and re.search(r"标准版|普通版", question):
+            # 清理 itemName 的空白并与基础型号做精确比较。
             candidates = [row for row in candidates if re.sub(r"\s+", "", str(row["product"].get("itemName") or "")).lower() == prefix]
+        # 从“20元以内”“日租金20元/天以下”等表达中提取数字预算上限。
         price_match = re.search(r"(?:日租金\s*)?(\d+(?:\.\d+)?)\s*元(?:\s*/\s*天)?\s*(?:以内|以下|之内|以下的)", question)
         if price_match:
             ceiling = float(price_match.group(1))

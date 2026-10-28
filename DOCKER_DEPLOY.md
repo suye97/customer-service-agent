@@ -2,7 +2,7 @@
 
 本文参考 `Agent-design-book` 的 Docker 部署结构，针对当前商品智能客服项目调整：FastAPI 同时提供静态前端和 API，使用远端 DashScope Embedding、OpenAI 兼容 LLM 与已有 Milvus，不包含 PDF、切片、路由、管理接口或 SSE 流式响应。
 
-> 当前仓库原本没有 Docker 部署文件。本文第 2 节给出完整模板，需要先按模板创建文件。本文档本身不代表镜像已经构建或服务器部署已经验证。
+> 仓库已提供 `Dockerfile`、`.dockerignore`、`docker-compose.yml` 和 `deploy/nginx.customer-service-agent.conf`，宿主机与容器端口均为 `8001`。本文保留配置模板及部署说明；实际构建和服务器部署仍需在目标环境执行。
 
 ## 1. 部署拓扑与服务器要求
 
@@ -11,7 +11,7 @@
 ```text
 浏览器 ──HTTPS──> 宿主机 nginx（80/443）
                       │
-                      └──> Docker / uvicorn（127.0.0.1:8000）
+                      └──> Docker / uvicorn（127.0.0.1:8001）
                               ├── DashScope Embedding（出网 443）
                               ├── DeepSeek 等 LLM（出网 443）
                               └── 已有 Milvus（出网 19530）
@@ -22,7 +22,7 @@
 | 系统 | Ubuntu 22.04/24.04、Debian 12 | 以下命令以 Ubuntu 为例 |
 | CPU / 内存 | 2 vCPU / 2 GB | 向量化和生成均在远端 API 完成 |
 | 磁盘 | 10 GB | 用于镜像、代码和容器日志 |
-| 入网 | 80、443；SSH 按需限制来源 | 不对公网开放 8000、19530 |
+| 入网 | 80、443；SSH 按需限制来源 | 不对公网开放 8001、19530 |
 | 出网 | 443 到 Embedding/LLM；19530 到 Milvus | 安全组和 Milvus 白名单需放行 |
 | Docker | Docker Engine + Compose v2 | 使用 `docker compose`，不是旧版 `docker-compose` |
 
@@ -30,7 +30,7 @@
 
 ## 2. 创建 Docker 部署文件
 
-在项目根目录依次创建以下文件。
+仓库根目录已创建以下文件，可按服务器环境调整：
 
 ### 2.1 `Dockerfile`
 
@@ -59,12 +59,12 @@ RUN useradd --create-home --uid 10001 --shell /usr/sbin/nologin appuser \
     && chown -R appuser:appuser /app
 
 USER appuser
-EXPOSE 8000
+EXPOSE 8001
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=4).status == 200 else 1)"
+    CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8001/api/health', timeout=4).status == 200 else 1)"
 
-CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001", "--workers", "1"]
 ```
 
 ### 2.2 `.dockerignore`
@@ -114,7 +114,7 @@ services:
     environment:
       TZ: Asia/Shanghai
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8001:8001"
     restart: unless-stopped
     init: true
     security_opt:
@@ -124,7 +124,7 @@ services:
         - CMD
         - python
         - -c
-        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=4).status == 200 else 1)"
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8001/api/health', timeout=4).status == 200 else 1)"
       interval: 30s
       timeout: 5s
       retries: 3
@@ -302,7 +302,7 @@ sudo systemctl enable docker
 ### 7.1 静态前端和进程健康检查
 
 ```bash
-curl --fail --silent http://127.0.0.1:8000/api/health | python3 -m json.tool
+curl --fail --silent http://127.0.0.1:8001/api/health | python3 -m json.tool
 ```
 
 预期返回：
@@ -314,7 +314,7 @@ curl --fail --silent http://127.0.0.1:8000/api/health | python3 -m json.tool
 ```
 
 ```bash
-curl --fail --silent http://127.0.0.1:8000/ | python3 -c "import sys; text=sys.stdin.read(); assert '轻租顾问' in text; print('frontend: ok')"
+curl --fail --silent http://127.0.0.1:8001/ | python3 -c "import sys; text=sys.stdin.read(); assert '轻租顾问' in text; print('frontend: ok')"
 ```
 
 > 当前 `/api/health` 只表示 FastAPI 进程可响应，**不会检查 Milvus、Embedding、LLM 或 collection**。`healthy` 容器不等于商品问答链路已经正常。
@@ -330,7 +330,7 @@ docker compose exec -T app python -c "import os; from pymilvus import MilvusClie
 以下请求会实际调用 Embedding 和 LLM，产生少量 API 用量：
 
 ```bash
-curl --fail --silent http://127.0.0.1:8000/api/chat -H 'Content-Type: application/json' -d '{"message":"日租金20元以内的iPhone 17有哪些？","history":[]}' | python3 -m json.tool
+curl --fail --silent http://127.0.0.1:8001/api/chat -H 'Content-Type: application/json' -d '{"message":"日租金20元以内的iPhone 17有哪些？","history":[]}' | python3 -m json.tool
 ```
 
 响应应包含：
@@ -343,7 +343,7 @@ curl --fail --silent http://127.0.0.1:8000/api/chat -H 'Content-Type: applicatio
 
 ## 8. 配置 nginx 与 HTTPS
 
-前端由 FastAPI 直接托管，不需要单独构建或部署。当前前端使用 `/static/...` 和 `/api/...` 绝对路径，建议部署在独立域名或子域名的根路径，不要直接套用参考项目的子路径方案。
+前端无需构建。页面、静态资源和 API 均使用相对路径，支持根路径及带尾斜杠的子路径部署。可选择现有站点的 `/customer-service-agent/` 子路径，或独立域名根路径。
 
 安装 nginx：
 
@@ -351,11 +351,36 @@ curl --fail --silent http://127.0.0.1:8000/api/chat -H 'Content-Type: applicatio
 sudo apt update && sudo apt install -y nginx
 ```
 
+### 8.1 方式一：现有站点子路径
+
+配套文件为 `deploy/nginx.customer-service-agent.conf`，默认约定：
+
+- 访问路径：`https://<YOUR_DOMAIN>/customer-service-agent/`；
+- 服务器项目目录：`/data/projects/customer-service-agent`；
+- 后端：`127.0.0.1:8001`；
+- HTML、JS、CSS 由 nginx 直接读取，`/customer-service-agent/api/` 转发到 FastAPI。
+
+将配置文件中的 `location` 块添加到现有站点的 `server { }` 中，不要把它当作包含 `events`/`http` 的完整 nginx 配置直接加载。若项目目录不同，同步修改两处 `alias`。配置已去除本项目不存在的 SSE 和管理接口。
+
+校验并加载：
+
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+子路径健康检查：
+
+```bash
+curl --fail --silent https://service.example.com/customer-service-agent/api/health | python3 -m json.tool
+```
+
+### 8.2 方式二：独立域名根路径
+
 创建 `/etc/nginx/conf.d/customer-service-agent.conf`，先把 `service.example.com` 替换为实际域名：
 
 ```nginx
 upstream customer_service_app {
-    server 127.0.0.1:8000;
+    server 127.0.0.1:8001;
     keepalive 16;
 }
 
@@ -500,7 +525,7 @@ docker compose up -d --no-build
 
 - [ ] `.env` 权限为 600，未进入 Git、镜像或日志。
 - [ ] `EMBEDDING_MOCK=0`，生产使用真实向量。
-- [ ] 8000 只绑定 `127.0.0.1`，公网仅通过 nginx 访问。
+- [ ] 8001 只绑定 `127.0.0.1`，公网仅通过 nginx 访问。
 - [ ] Milvus 19530 不对公网开放，使用最小权限账号和来源白名单。
 - [ ] 容器使用非 root 用户，并启用 `no-new-privileges`。
 - [ ] 对外启用 HTTPS，证书自动续期已验证。
@@ -521,7 +546,7 @@ docker compose up -d --no-build
 | LLM 返回答案但商品为空 | 检查候选商品是否满足型号、预算条件；查看服务日志中的回答格式异常 |
 | 构建卡在 pip | 使用 `PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/` 重新构建 |
 | nginx 504 | 检查应用日志和 LLM 延迟；当前同步问答可能较慢，可适度增加 `proxy_read_timeout` |
-| 8000 被其他服务占用 | 将 Compose 端口改为 `127.0.0.1:8001:8000`，同时修改 nginx upstream |
+| 8001 被其他服务占用 | 将 Compose 端口改为 `127.0.0.1:8002:8001`，同时修改 nginx upstream |
 | 修改 `.env` 后未生效 | 执行 `docker compose up -d --force-recreate app`，再检查容器环境，不要只重启 nginx |
 
 ## 12. 最终上线检查
@@ -530,6 +555,6 @@ docker compose up -d --no-build
 2. 首页和 `/static/app.js`、`/static/styles.css` 可通过 HTTPS 访问。
 3. Milvus collection 检查成功。
 4. 真实 `/api/chat` 请求返回答案，商品卡片符合型号和预算条件。
-5. 公网无法直接访问 8000 和 Milvus 19530。
+5. 公网无法直接访问 8001 和 Milvus 19530。
 6. 重启 Docker 或服务器后应用能够自动恢复。
 7. 已保留上一个可用镜像，并完成一次回滚流程确认。

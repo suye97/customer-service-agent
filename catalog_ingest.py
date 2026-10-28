@@ -39,6 +39,7 @@ class Product:
 
 
 def session() -> requests.Session:
+    """创建带自动重试的 HTTP 会话，并按线程复用以避免并发共享连接。"""
     if not hasattr(_sessions, "value"):
         client = requests.Session()
         retry = Retry(total=3, backoff_factor=0.5, status_forcelist=[429, 500, 502, 503, 504], allowed_methods=["GET"], respect_retry_after_header=True)
@@ -48,6 +49,7 @@ def session() -> requests.Session:
 
 
 def response_data(response: requests.Response, key: str) -> list[dict[str, Any]]:
+    """校验接口响应并提取指定列表；商品接口的空 data 对象按空列表处理。"""
     response.raise_for_status()
     payload = response.json()
     if not isinstance(payload, dict) or payload.get("success") is not True or payload.get("code") != 200:
@@ -61,10 +63,12 @@ def response_data(response: requests.Response, key: str) -> list[dict[str, Any]]
 
 
 def walk_categories(nodes: list[dict[str, Any]]) -> list[Category]:
+    """递归展开分类树，生成包含完整路径的分类列表并拒绝重复分类 ID。"""
     result: list[Category] = []
     seen: set[str] = set()
 
     def walk(entries: list[dict[str, Any]], parents: tuple[str, ...]) -> None:
+        """递归访问分类节点，累计父级名称并保存展开后的分类。"""
         for node in entries:
             if not isinstance(node, dict) or not node.get("id") or not node.get("name"):
                 raise ValueError("分类缺少 id 或 name")
@@ -84,12 +88,14 @@ def walk_categories(nodes: list[dict[str, Any]]) -> list[Category]:
 
 
 def fetch_categories(get=None, timeout: float = 15) -> list[Category]:
+    """请求线上分类接口并返回递归展开后的全部分类。"""
     get = get or session().get
     nodes = response_data(get(CATEGORY_URL, headers=HEADERS, timeout=timeout), "category")
     return walk_categories(nodes)
 
 
 def fetch_category_items(category: Category, page_size: int, max_pages: int, timeout: float, get=None) -> tuple[Category, list[dict[str, Any]], int]:
+    """顺序抓取单个分类的商品分页，并检测异常响应和重复满页。"""
     get = get or session().get
     all_items: list[dict[str, Any]] = []
     previous_fingerprint: str | None = None
@@ -109,6 +115,7 @@ def fetch_category_items(category: Category, page_size: int, max_pages: int, tim
 
 
 def merge_items(results: list[tuple[Category, list[dict[str, Any]], int]]) -> dict[str, Product]:
+    """按商品 ID 合并各分类抓取结果，保留商品数据并汇总所属分类。"""
     products: dict[str, Product] = {}
     for category, items, _ in results:
         for item in items:
@@ -124,6 +131,7 @@ def merge_items(results: list[tuple[Category, list[dict[str, Any]], int]]) -> di
 
 
 def collect_products(categories: list[Category], workers: int = 4, page_size: int = 30, max_pages: int = 100, timeout: float = 15, get=None) -> tuple[dict[str, Product], int, int]:
+    """使用有界线程池并发抓取分类，任一分类失败则停止整次导入。"""
     results: list[tuple[Category, list[dict[str, Any]], int]] = []
     failures: list[str] = []
     order = {category.id: index for index, category in enumerate(categories)}
@@ -142,6 +150,7 @@ def collect_products(categories: list[Category], workers: int = 4, page_size: in
 
 
 def embedding_text(product: Product) -> str:
+    """拼接分类、名称、描述、容量和标签，生成用于向量化的商品文本。"""
     data = product.data
     labels = data.get("itemLabels") or []
     label_names = [str(label.get("name")) for label in labels if isinstance(label, dict) and label.get("name")]
@@ -158,6 +167,7 @@ def embedding_text(product: Product) -> str:
 
 
 def argument_parser() -> argparse.ArgumentParser:
+    """定义商品抓取与向量入库命令行参数。"""
     parser = argparse.ArgumentParser(description="抓取商品、生成向量并写入 Milvus")
     parser.add_argument("--dry-run", action="store_true", help="仅抓取和统计，不生成向量或写入 Milvus")
     parser.add_argument("--workers", type=int, default=4)
@@ -169,6 +179,7 @@ def argument_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    """执行分类商品抓取流程，并按参数决定仅检查或生成向量入库。"""
     from dotenv import load_dotenv
 
     load_dotenv()

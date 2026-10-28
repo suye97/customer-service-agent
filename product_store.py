@@ -8,6 +8,7 @@ from catalog_ingest import DEFAULT_COLLECTION, DEFAULT_MODEL, Product, embedding
 
 
 def embed_texts(texts: list[str], *, model: str, dimension: int, mock: bool, api_key: str, base_url: str) -> list[list[float]]:
+    """批量生成指定维度的真实或开发用模拟文本向量。"""
     if mock:
         vectors = []
         for text in texts:
@@ -32,6 +33,7 @@ def embed_texts(texts: list[str], *, model: str, dimension: int, mock: bool, api
 
 
 def ensure_collection(client: Any, collection: str, dimension: int, model_marker: str) -> None:
+    """创建或校验 Milvus 集合，并为兼容旧集合补充缺失字段。"""
     from pymilvus import DataType, MilvusClient
 
     schema_marker = f"embedding_model={model_marker};dim={dimension}"
@@ -95,6 +97,7 @@ def ensure_collection(client: Any, collection: str, dimension: int, model_marker
 
 
 def index_products(products: list[Product], *, client: Any = None, embedder=embed_texts) -> int:
+    """分批生成商品向量并 upsert 到 Milvus，返回写入数量。"""
     if not products:
         return 0
     collection = os.getenv("MILVUS_COLLECTION", DEFAULT_COLLECTION)
