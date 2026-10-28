@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12304c">
+  <title>轻租顾问 · 找到适合你的设备</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="轻租顾问首页"><span class="brand-mark" aria-hidden="true">Q</span><span>轻租顾问</span></a>
+      <span class="topbar-note"><span class="online-dot" aria-hidden="true"></span>商品选租助手</span>
+    </header>
+    <main class="layout">
+      <section class="conversation" aria-label="对话">
+        <div class="conversation-intro"><p class="intro-kicker">让选设备变简单</p><h1>想租什么设备？<br>说说你的使用场景。</h1><p>预算、品牌、容量、使用习惯，都可以告诉我。</p></div>
+        <div class="messages" id="messages" aria-live="polite">
+          <div class="message assistant"><div class="bubble">你好，我可以帮你挑选手机、平板和其他数码设备。你想找什么？</div></div>
+        </div>
+        <div class="suggestions" id="suggestions" aria-label="试试这样提问">
+          <button type="button" data-question="想租一台拍照好的手机，有什么推荐？">拍照好的手机</button>
+          <button type="button" data-question="日租金 20 元以内的 iPhone 有哪些？">20 元以内的 iPhone</button>
+          <button type="button" data-question="有哪些适合出差使用的轻薄设备？">出差用的轻薄设备</button>
+        </div>
+        <form class="composer" id="composer"><label class="sr-only" for="question">输入你的问题</label><input id="question" name="question" maxlength="1000" autocomplete="off" placeholder="说说你的需求，例如：想租一台 iPhone 17"><button id="send" type="submit" aria-label="发送问题">发送 <span aria-hidden="true">↗</span></button></form>
+        <p class="composer-note">日租金为商品信息参考，具体以商品页面为准。</p>
+      </section>
+    </main>
+  </div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

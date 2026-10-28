@@ -1,0 +1,108 @@
+{
+	"success": true,
+	"code": 200,
+	"message": "请求成功",
+	"timestamp": "2026-10-28 14:04:55",
+	"data": {
+		"items": [
+			{
+				"itemId": "1966090113525575680",
+				"id": "1966090113525575680",
+				"pic": "https://qiaozuji-flms-public.cdn.qiaozuji.com/2026/10/13/2109856110696132608.jpg",
+				"name": "iPhone 17 Pro Max 全新未激活可选",
+				"title": "iPhone 17 Pro Max 全新未激活可选",
+				"itemName": "iPhone17ProMax",
+				"description": "平台自营 非监管机无锁",
+				"dailyRental": 19.41,
+				"sellPrice": 0,
+				"itemLabels": [
+					{
+						"type": "ACTIVITIES",
+						"name": "立减10元",
+						"color": "#FF5151",
+						"couponType": "RENT_ACTIVITY"
+					},
+					{
+						"type": "HOME_PAGE_HOT_LABEL",
+						"name": "立减10元",
+						"color": "#FF5151",
+						"couponType": "RENT_ACTIVITY"
+					},
+					{
+						"type": "ABBREVIATION_DESC",
+						"name": "先下先得",
+						"color": "#FF5151"
+					}
+				],
+				"isRecommend": "",
+				"sort": 99999,
+				"type": "INNER",
+				"jumpType": "",
+				"routeType": "",
+				"path": "",
+				"appId": "",
+				"saleType": "RENT",
+				"aliChannel": "MP",
+				"saleChannel": "ALIPAY_QJ",
+				"quality": "100",
+				"qualityDesc": "全新",
+				"status": "SHELVES",
+				"isSpecial": "NO",
+				"detailNewVersion": "YES",
+				"startRentDay": 365,
+				"memory": [
+					"256GB",
+					"512GB",
+					"1TB",
+					"2TB"
+				],
+				"merchantId": ""
+			},
+			{
+				"itemId": "2052665272592478208",
+				"id": "2052665272592478208",
+				"pic": "https://qiaozuji-flms-public.cdn.qiaozuji.com/2026/09/18/2100851185823707136.jpeg",
+				"name": "iPhone 17 Pro 全新",
+				"title": "iPhone 17 Pro 全新",
+				"itemName": "iPhone17Pro",
+				"description": "平台自营 非监管机无锁",
+				"dailyRental": 19.15,
+				"sellPrice": 0,
+				"itemLabels": [
+					{
+						"type": "SUB_TITLE_FRONT",
+						"name": "无溢价金",
+						"color": "#1677FF"
+					},
+					{
+						"type": "ABBREVIATION_DESC",
+						"name": "先下先发",
+						"color": "#FF5151"
+					}
+				],
+				"isRecommend": "",
+				"sort": 99998,
+				"type": "INNER",
+				"jumpType": "",
+				"routeType": "",
+				"path": "",
+				"appId": "",
+				"saleType": "RENT",
+				"aliChannel": "MP",
+				"saleChannel": "ALIPAY_QJ",
+				"quality": "100",
+				"qualityDesc": "全新",
+				"status": "SHELVES",
+				"isSpecial": "NO",
+				"detailNewVersion": "YES",
+				"startRentDay": 365,
+				"memory": [
+					"256GB",
+					"512GB",
+					"1TB"
+				],
+				"merchantId": ""
+			}
+		]
+	}
+}

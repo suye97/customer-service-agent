@@ -1,0 +1,280 @@
+{
+  "draft_version": 1,
+  "verified_on": "2026-10-28",
+  "review_status": "pending_user_review",
+  "write_policy": "仅用于审核；未经用户明确确认，不生成向量、不写入 Milvus。",
+  "field_policy": {
+    "officially_verified": [
+      "product.itemName",
+      "product.memory",
+      "product.description 中明确列出的硬件规格",
+      "product.pic 所使用的官网图片地址"
+    ],
+    "fictional_demo_fields": [
+      "id",
+      "product.dailyRental",
+      "product.sellPrice",
+      "product.itemLabels",
+      "product.qualityDesc",
+      "product.status",
+      "product.startRentDay"
+    ],
+    "notes": "Apple 与 Samsung 的部分规格来自品牌海外官网，不代表中国地区销售版本、网络支持或保修政策。所有日租金、售价、标签、成色与上架状态均为虚构演示数据，不是品牌报价或真实库存。"
+  },
+  "products": [
+    {
+      "id": "demo-iphone-18-pro",
+      "categories": [
+        {
+          "id": "2100753534281351168",
+          "name": "iPhone18",
+          "path": "全新手机 / 苹果 / iPhone18"
+        }
+      ],
+      "product": {
+        "itemId": "demo-iphone-18-pro",
+        "id": "demo-iphone-18-pro",
+        "itemName": "iPhone 18 Pro",
+        "name": "Apple iPhone 18 Pro",
+        "title": "Apple iPhone 18 Pro 演示租赁商品",
+        "description": "A20 Pro 芯片；6.3 英寸 OLED 显示屏；4800 万像素融合式主摄、超广角及长焦摄像头；1800 万像素 Center Stage 前置摄像头；256GB、512GB、1TB、2TB 容量选项。租赁与库存信息为演示数据。",
+        "dailyRental": 26.8,
+        "sellPrice": 8999.0,
+        "pic": "https://www.apple.com.cn/iphone-18-pro/images/overview/aio/hero__elo7tt0mnqy6_large.webp",
+        "itemLabels": [
+          {
+            "name": "演示数据",
+            "type": "DEMO",
+            "color": "#64748B"
+          },
+          {
+            "name": "A20 Pro",
+            "type": "FEATURE",
+            "color": "#2563EB"
+          }
+        ],
+        "qualityDesc": "全新（演示）",
+        "status": "SHELVES",
+        "memory": [
+          "256GB",
+          "512GB",
+          "1TB",
+          "2TB"
+        ],
+        "startRentDay": 12
+      },
+      "verification": {
+        "sources": [
+          "https://www.apple.com.cn/iphone-18-pro/specs/",
+          "https://www.apple.com.cn/newsroom/2026/09/apple-debuts-iphone-18-pro-and-iphone-18-pro-max/"
+        ],
+        "verified_facts": "官网于 2026-09-09 发布；A20 Pro、6.3 英寸 OLED、4800 万像素融合式主摄/超广角/长焦、1800 万像素 Center Stage 前置摄像头、四种容量。",
+        "image_check": "官网图片于 2026-10-28 返回 HTTP 200 image/webp；为系列展示图，不表示特定机身颜色。",
+        "unverified_or_fictional": "日租金、售价、标签、成色、库存与最短租期均为虚构。"
+      }
+    },
+    {
+      "id": "demo-iphone-18-pro-max",
+      "categories": [
+        {
+          "id": "2100753534281351168",
+          "name": "iPhone18",
+          "path": "全新手机 / 苹果 / iPhone18"
+        }
+      ],
+      "product": {
+        "itemId": "demo-iphone-18-pro-max",
+        "id": "demo-iphone-18-pro-max",
+        "itemName": "iPhone 18 Pro Max",
+        "name": "Apple iPhone 18 Pro Max",
+        "title": "Apple iPhone 18 Pro Max 演示租赁商品",
+        "description": "A20 Pro 芯片；6.9 英寸 OLED 显示屏；4800 万像素融合式主摄、超广角及长焦摄像头；1800 万像素 Center Stage 前置摄像头；256GB、512GB、1TB、2TB 容量选项。租赁与库存信息为演示数据。",
+        "dailyRental": 29.9,
+        "sellPrice": 9999.0,
+        "pic": "https://www.apple.com.cn/iphone-18-pro/images/overview/aio/hero__elo7tt0mnqy6_large.webp",
+        "itemLabels": [
+          {
+            "name": "演示数据",
+            "type": "DEMO",
+            "color": "#64748B"
+          },
+          {
+            "name": "大屏旗舰",
+            "type": "FEATURE",
+            "color": "#2563EB"
+          }
+        ],
+        "qualityDesc": "全新（演示）",
+        "status": "SHELVES",
+        "memory": [
+          "256GB",
+          "512GB",
+          "1TB",
+          "2TB"
+        ],
+        "startRentDay": 12
+      },
+      "verification": {
+        "sources": [
+          "https://www.apple.com.cn/iphone-18-pro/specs/",
+          "https://www.apple.com.cn/newsroom/2026/09/apple-debuts-iphone-18-pro-and-iphone-18-pro-max/"
+        ],
+        "verified_facts": "官网于 2026-09-09 发布；A20 Pro、6.9 英寸 OLED、4800 万像素融合式主摄/超广角/长焦、1800 万像素 Center Stage 前置摄像头、四种容量。",
+        "image_check": "官网图片于 2026-10-28 返回 HTTP 200 image/webp；为 Pro 系列共用展示图，不表示特定机身颜色。",
+        "unverified_or_fictional": "日租金、售价、标签、成色、库存与最短租期均为虚构。"
+      }
+    },
+    {
+      "id": "demo-samsung-galaxy-s26-ultra",
+      "categories": [
+        {
+          "id": "1927533113773297664",
+          "name": "Galaxy S系列",
+          "path": "全新手机 / 三星 / Galaxy S系列"
+        }
+      ],
+      "product": {
+        "itemId": "demo-samsung-galaxy-s26-ultra",
+        "id": "demo-samsung-galaxy-s26-ultra",
+        "itemName": "Samsung Galaxy S26 Ultra",
+        "name": "Samsung Galaxy S26 Ultra",
+        "title": "Samsung Galaxy S26 Ultra 演示租赁商品",
+        "description": "6.9 英寸显示屏；Snapdragon 8 Elite Gen 5 for Galaxy；2 亿像素广角、5000 万像素超广角、5000 万像素长焦及 1000 万像素长焦摄像头；5000mAh 电池；256GB、512GB、1TB 容量选项。规格来源为 Samsung 新加坡官网，租赁与库存信息为演示数据。",
+        "dailyRental": 24.6,
+        "sellPrice": 9699.0,
+        "pic": "https://images.samsung.com/sg/smartphones/galaxy-s26-ultra/images/galaxy-s26-ultra-features-kv.jpg?imbypass=true",
+        "itemLabels": [
+          {
+            "name": "演示数据",
+            "type": "DEMO",
+            "color": "#64748B"
+          },
+          {
+            "name": "2亿像素主摄",
+            "type": "FEATURE",
+            "color": "#2563EB"
+          }
+        ],
+        "qualityDesc": "全新（演示）",
+        "status": "SHELVES",
+        "memory": [
+          "256GB",
+          "512GB",
+          "1TB"
+        ],
+        "startRentDay": 12
+      },
+      "verification": {
+        "sources": [
+          "https://www.samsung.com/sg/smartphones/galaxy-s26-ultra/",
+          "https://www.samsung.com/uk/mobile-phone-buying-guide/introducing-samsung-galaxy-s26/"
+        ],
+        "verified_facts": "Samsung 官网列出的新加坡版本规格；官方发布资料说明 2026-02-25 发布，2026-03-11 起上市。",
+        "image_check": "Samsung 新加坡官网图片于 2026-10-28 返回 HTTP 200 image/jpeg。",
+        "unverified_or_fictional": "中国地区配置、网络支持、售价和保修未核验；日租金、售价、标签、成色、库存与最短租期均为虚构。"
+      }
+    },
+    {
+      "id": "demo-huawei-pura-90-pro-max",
+      "categories": [
+        {
+          "id": "1927532596899209216",
+          "name": "Pura系列",
+          "path": "全新手机 / 华为 / Pura系列"
+        }
+      ],
+      "product": {
+        "itemId": "demo-huawei-pura-90-pro-max",
+        "id": "demo-huawei-pura-90-pro-max",
+        "itemName": "HUAWEI Pura 90 Pro Max",
+        "name": "HUAWEI Pura 90 Pro Max",
+        "title": "HUAWEI Pura 90 Pro Max 演示租赁商品",
+        "description": "6.9 英寸 OLED 显示屏；麒麟 9030S；5000 万像素超高动态主摄、4000 万像素超广角及 2 亿像素长焦摄像头；6000mAh 电池（典型值）；256GB、512GB、1TB 容量选项。租赁与库存信息为演示数据。",
+        "dailyRental": 21.8,
+        "sellPrice": 6499.0,
+        "pic": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/phones/pura90-pro-max/img/design/design-intro-phone-thumb.png",
+        "itemLabels": [
+          {
+            "name": "演示数据",
+            "type": "DEMO",
+            "color": "#64748B"
+          },
+          {
+            "name": "2亿像素长焦",
+            "type": "FEATURE",
+            "color": "#2563EB"
+          }
+        ],
+        "qualityDesc": "全新（演示）",
+        "status": "SHELVES",
+        "memory": [
+          "256GB",
+          "512GB",
+          "1TB"
+        ],
+        "startRentDay": 12
+      },
+      "verification": {
+        "sources": [
+          "https://consumer.huawei.com/cn/phones/pura90-pro-max/specs/",
+          "https://consumer.huawei.com/cn/phones/pura90-pro-max/"
+        ],
+        "verified_facts": "华为中国官网规格页列出的屏幕、芯片、摄像头、电池和存储规格。官网另列 12GB/16GB RAM，但未据此推测每个容量版本的 RAM 组合。",
+        "image_check": "华为中国官网产品图于 2026-10-28 返回 HTTP 200 image/png。",
+        "unverified_or_fictional": "日租金、标签、成色、库存与最短租期均为虚构；sellPrice 采用官网起售价，仅作演示字段，并非租赁押金或实际成交价。"
+      }
+    },
+    {
+      "id": "demo-xiaomi-18-pro-max",
+      "categories": [
+        {
+          "id": "1927537786045980672",
+          "name": "Xiaomi 数字系列",
+          "path": "全新手机 / 小米 / Xiaomi 数字系列"
+        }
+      ],
+      "product": {
+        "itemId": "demo-xiaomi-18-pro-max",
+        "id": "demo-xiaomi-18-pro-max",
+        "itemName": "Xiaomi 18 Pro Max",
+        "name": "Xiaomi 18 Pro Max",
+        "title": "Xiaomi 18 Pro Max 演示租赁商品",
+        "description": "官网购买页列出的版本包括 12GB+256GB、12GB+512GB、16GB+512GB、16GB+1TB。其他硬件规格本次未完整核实，未在草稿中补写；租赁与库存信息为演示数据。",
+        "dailyRental": 23.5,
+        "sellPrice": 6999.0,
+        "pic": "",
+        "itemLabels": [
+          {
+            "name": "演示数据",
+            "type": "DEMO",
+            "color": "#64748B"
+          },
+          {
+            "name": "规格待复核",
+            "type": "NOTICE",
+            "color": "#B45309"
+          }
+        ],
+        "qualityDesc": "全新（演示）",
+        "status": "SHELVES",
+        "memory": [
+          "12GB+256GB",
+          "12GB+512GB",
+          "16GB+512GB",
+          "16GB+1TB"
+        ],
+        "startRentDay": 12
+      },
+      "verification": {
+        "sources": [
+          "https://www.mi.com/prod/xiaomi-18-pro-max",
+          "https://www.mi.com/prod/xiaomi-18-pro-max/specs",
+          "https://www.mi.com/shop/buy?product_id=25526"
+        ],
+        "verified_facts": "官方产品名称与购买页所列容量版本；产品页显示 6999 元起。",
+        "image_check": "未找到可确认的官方商品图直链，因此 pic 留空，不使用第三方图片。",
+        "unverified_or_fictional": "屏幕、芯片、摄像头与电池尚未完成官网正文核验；日租金、标签、成色、库存与最短租期均为虚构；sellPrice 采用官网起售价，仅作演示字段。"
+      }
+    }
+  ]
+}

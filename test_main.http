@@ -1,0 +1,14 @@
+# Open the product shopping assistant
+GET http://127.0.0.1:8000/
+
+###
+
+GET http://127.0.0.1:8000/api/health
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/api/chat
+Content-Type: application/json
+
+{"message":"想租一台日租金20元以内的iPhone17，有推荐吗？","history":[]}
