@@ -52,10 +52,11 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
-COPY main.py customer_agent.py catalog_ingest.py product_store.py ./
+COPY main.py customer_agent.py product_matching.py shopping_graph.py catalog_ingest.py product_store.py ./
 COPY web ./web
 
 RUN useradd --create-home --uid 10001 --shell /usr/sbin/nologin appuser \
+    && mkdir -p /app/var \
     && chown -R appuser:appuser /app
 
 USER appuser
@@ -88,6 +89,7 @@ tests/
 *.json
 *.http
 *.tar.gz
+var/
 Dockerfile
 .dockerignore
 docker-compose*.yml
@@ -115,6 +117,8 @@ services:
       TZ: Asia/Shanghai
     ports:
       - "127.0.0.1:8001:8001"
+    volumes:
+      - checkpoints:/app/var
     restart: unless-stopped
     init: true
     security_opt:
@@ -137,9 +141,12 @@ services:
     # 仅当 Milvus 在 Docker 宿主机上且已监听宿主机可达地址时启用：
     # extra_hosts:
     #   - "host.docker.internal:host-gateway"
+
+volumes:
+  checkpoints:
 ```
 
-应用不在本地保存业务数据，因此不需要 `data/` 或 `logs/` 数据卷。商品数据由 Milvus 持久化，应用日志输出到 Docker。
+商品数据由 Milvus 持久化，LangGraph 会话状态保存在命名卷 `checkpoints` 的 SQLite 文件中；重建容器仍会保留会话。不要在升级时执行 `docker compose down -v`。应用日志输出到 Docker。
 
 ## 3. 准备服务器代码
 
@@ -495,6 +502,7 @@ APP_VERSION=v1.0.0 docker compose up -d --no-build
 - **Milvus**：由 Milvus 侧执行集合适配的数据备份；应用容器不保存商品副本。
 - **`.env`**：包含密钥，应加密备份，不能提交 Git 或打入镜像。
 - **部署配置与代码**：通过 Git 和版本化镜像保留。
+- **LangGraph checkpoint**：定期备份 Docker 命名卷 `customer-service-agent_checkpoints` 中的 SQLite 数据；备份时使用 SQLite 在线备份或暂停应用以保持文件一致性。
 - 应用没有 PDF、切片、缓存或本地日志目录需要备份。
 
 ### 可选：离线镜像交付

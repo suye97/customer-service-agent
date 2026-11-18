@@ -6,7 +6,9 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from customer_agent import ProductAgent
-from main import app, get_agent
+from main import app, get_graph
+from langgraph.checkpoint.memory import MemorySaver
+from shopping_graph import build_shopping_graph
 
 
 ITEM = {
@@ -73,6 +75,25 @@ class CustomerAgentTests(unittest.TestCase):
         self.assertEqual(len(json.loads(llm.messages[-1]["content"])["candidate_products"]), 1)
         agent.answer("10元以内的 iPhone 17 Pro", [])
         self.assertEqual(json.loads(llm.messages[-1]["content"])["candidate_products"], [])
+
+    @patch.dict("os.environ", {"EMBEDDING_MOCK": "0"})
+    def test_memory_and_strict_budget_exclude_wrong_products(self):
+        llm = FakeLlm({"answer": "没有符合条件的商品。", "product_ids": []})
+        agent = ProductAgent(milvus=FakeMilvus(), embedding_client=FakeEmbedding(), llm_client=llm)
+        agent.answer("iPhone17 Pro 512G 日租金20以下", [])
+        self.assertEqual(json.loads(llm.messages[-1]["content"])["candidate_products"], [])
+        agent.answer("iPhone17 Pro 256G 日租金19.15以下", [])
+        self.assertEqual(json.loads(llm.messages[-1]["content"])["candidate_products"], [])
+
+    def test_catalogue_model_boundaries_and_variants(self):
+        agent = ProductAgent()
+        names = ["iPhone18", "iPhone18Pro", "iPhone18ProMax", "iPhone180", "GalaxyS25Ultra"]
+        rows = [{"id": name, "product": {"itemName": name, "memory": ["512GB"], "dailyRental": 18}, "category_paths": []} for name in names]
+        self.assertEqual([row["id"] for row in agent.filter_candidates("iPhone18 Pro 512G", rows)], ["iPhone18Pro"])
+        self.assertEqual([row["id"] for row in agent.filter_candidates("iPhone18 512G", rows)], names[:3])
+        self.assertEqual([row["id"] for row in agent.filter_candidates("iPhone18 标准版", rows)], ["iPhone18"])
+        self.assertEqual([row["id"] for row in agent.filter_candidates("Galaxy S25 Ultra", rows)], ["GalaxyS25Ultra"])
+        self.assertEqual(agent.filter_candidates("iPhone181 512G", rows), [])
 
     @patch.dict("os.environ", {"EMBEDDING_MOCK": "0"})
     def test_model_before_chinese_punctuation(self):
@@ -147,18 +168,20 @@ class CustomerAgentTests(unittest.TestCase):
     def test_api_returns_answer_and_products(self):
         """验证聊天 API、首页及子路径兼容资源地址的接口约定。"""
         agent = ProductAgent(milvus=FakeMilvus(), embedding_client=FakeEmbedding(), llm_client=FakeLlm({"answer": "可以看看这款。", "product_ids": ["item-1"]}))
-        app.dependency_overrides[get_agent] = lambda: agent
+        graph = build_shopping_graph(agent, MemorySaver())
+        app.dependency_overrides[get_graph] = lambda: graph
         try:
-            response = TestClient(app).post("/api/chat", json={"message": "推荐手机"})
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.json()["products"][0]["name"], "iPhone 17 Pro")
-            page = TestClient(app).get("/")
-            self.assertEqual(page.status_code, 200)
-            self.assertIn('href="static/styles.css"', page.text)
-            self.assertIn('src="static/app.js"', page.text)
-            self.assertIn('href="./"', page.text)
-            script = TestClient(app).get("/static/app.js")
-            self.assertIn("fetch('api/chat'", script.text)
+            with TestClient(app) as client:
+                response = client.post("/api/chat", json={"message": "推荐手机"})
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json()["products"][0]["name"], "iPhone 17 Pro")
+                page = client.get("/")
+                self.assertEqual(page.status_code, 200)
+                self.assertIn('href="static/styles.css"', page.text)
+                self.assertIn('src="static/app.js"', page.text)
+                self.assertIn('href="./"', page.text)
+                script = client.get("/static/app.js")
+                self.assertIn("fetch('api/chat'", script.text)
         finally:
             app.dependency_overrides.clear()
 

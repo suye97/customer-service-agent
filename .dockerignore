@@ -16,6 +16,7 @@ tests/
 *.json
 *.http
 *.tar.gz
+var/
 Dockerfile
 .dockerignore
 docker-compose*.yml

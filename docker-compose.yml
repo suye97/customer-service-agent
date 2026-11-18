@@ -14,6 +14,8 @@ services:
       TZ: Asia/Shanghai
     ports:
       - "127.0.0.1:8001:8001"
+    volumes:
+      - checkpoints:/app/var
     restart: unless-stopped
     init: true
     security_opt:
@@ -36,3 +38,6 @@ services:
     # 仅当 Milvus 在 Docker 宿主机上且已监听宿主机可达地址时启用：
     # extra_hosts:
     #   - "host.docker.internal:host-gateway"
+
+volumes:
+  checkpoints:

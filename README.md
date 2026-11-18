@@ -1,8 +1,14 @@
 # 商品智能客服
 
-运行 `uvicorn main:app --reload` 后，打开 `http://127.0.0.1:8000/`，可以通过自然语言询问商品并查看推荐卡片。客服沿用本项目已写入的 Milvus 商品集合，先用相同的 DashScope embedding 模型检索，再调用 `.env` 中配置的 OpenAI 兼容 LLM（如 DeepSeek）生成回答。每轮回答会在对应的对话气泡内展示商品图片、名称、日租金和标签，之前的推荐也保留在对话记录中；不显示检索命中详情，不进行路由或 PDF 处理。
+运行 `uvicorn main:app --reload` 后，打开 `http://127.0.0.1:8000/`，可以通过自然语言询问商品并查看推荐卡片。客服沿用本项目已写入的 Milvus 商品集合，先用相同的 DashScope embedding 模型检索，再调用 `.env` 中配置的 OpenAI 兼容 LLM（如 DeepSeek）生成回答。LangGraph 编排商品检索、模拟订单查询、条件比较和人工确认；SQLite 保存会话图状态。每轮回答会在对应的对话气泡内展示商品与模拟订单。
 
-需要配置 `EMBEDDING_API_KEY`、`LLM_API_KEY`、`SYMBOL_AGENT_MILVUS_URI`、`SYMBOL_AGENT_MILVUS_TOKEN`、`MILVUS_COLLECTION`，并保持 `EMBEDDING_MODEL`/`EMBEDDING_DIMENSION` 与入库时相同。`POST /api/chat` 接收 `{ "message": "想要拍照好的手机", "history": [] }`，返回 `{ "answer": "...", "products": [...] }`。商品推荐仅从检索到的商品 ID 中选择；对明确的 iPhone/iPad 型号和“X 元以内”条件还会筛选候选商品。图片与价格直接从已录入的商品 JSON 读取。`EMBEDDING_MOCK=1` 无法用于语义检索。
+需要配置 `EMBEDDING_API_KEY`、`LLM_API_KEY`、`SYMBOL_AGENT_MILVUS_URI`、`SYMBOL_AGENT_MILVUS_TOKEN`、`MILVUS_COLLECTION`，并保持 `EMBEDDING_MODEL`/`EMBEDDING_DIMENSION` 与入库时相同。`CHECKPOINT_SQLITE_PATH` 默认是项目下的 `var/checkpoints.sqlite3`，启动时自动创建目录和数据库文件；无需 MySQL。`EMBEDDING_MOCK=1` 无法用于语义检索。商品推荐仅从 Milvus 检索候选中选择，明确型号、容量和日租金条件在模型调用前过滤。
+
+## 会话与模拟换单
+
+`POST /api/chat` 接收 `{ "message": "有没有 iPhone18 512G 日租金20以下的商品，也查下我的订单，如果更贵我想退款换单" }`，返回 `answer`、`products`、`orders`、`pending_refund`、`quote` 和 `result`。商品仍从 Milvus 检索；模拟订单从检索到的商品型号、容量和日租金构造，在可用商品数据允许时随机选择四种演示结果：同型号容量但贵 1 元、便宜 1 元、容量不同、型号不同。订单在查订单或提出退款时生成；结果随 LangGraph checkpoint 保存，后续单独提出退款会沿用当前有效订单。用户提出退款时显示确认按钮；有同型号容量且更便宜的商品可模拟退款换单，否则只模拟退款。
+
+`GET /api/session` 可在页面刷新后恢复待确认方案。用户点击确认或拒绝时，`POST /api/refund/confirm` 接收 `{ "approved": true }` 或 `{ "approved": false }`，恢复 LangGraph 中断。确认仅改变 checkpoint 中的**模拟订单**并创建模拟新单，不调用真实订单、退款或支付接口。新会话使用服务端生成的随机 HttpOnly Cookie；服务端从 Cookie 派生 `thread_id`，从 SQLite 中续接最近的对话，不接受请求体指定用户 ID。旧客户端的 `history` 字段仍可传入，但服务端只使用 checkpoint 中的历史。这个 Cookie 只识别同一浏览器会话，**不是用户登录认证**；对接真实订单前必须增加登录鉴权、订单归属校验、报价/库存复核、幂等与交易补偿。一个会话有待确认方案时，新的聊天请求返回 409，先确认或取消。
 
 ## 商品分类向量导入
 

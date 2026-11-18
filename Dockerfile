@@ -15,10 +15,11 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
-COPY main.py customer_agent.py catalog_ingest.py product_store.py ./
+COPY main.py customer_agent.py product_matching.py shopping_graph.py catalog_ingest.py product_store.py ./
 COPY web ./web
 
 RUN useradd --create-home --uid 10001 --shell /usr/sbin/nologin appuser \
+    && mkdir -p /app/var \
     && chown -R appuser:appuser /app
 
 USER appuser
