@@ -95,6 +95,24 @@ class CustomerAgentTests(unittest.TestCase):
         self.assertEqual([row["id"] for row in agent.filter_candidates("Galaxy S25 Ultra", rows)], ["GalaxyS25Ultra"])
         self.assertEqual(agent.filter_candidates("iPhone181 512G", rows), [])
 
+    def test_real_catalogue_compound_models_and_storage(self):
+        agent = ProductAgent()
+        products = [
+            {"id": "oppo", "product": {"itemName": "OPPOFindX8Pro", "memory": ["12GB+256GB", "12GB+512GB", "16GB+1TB"], "dailyRental": 10.88}},
+            {"id": "vivo", "product": {"itemName": "vivoX200Ultra", "memory": ["12GB+512GB"], "dailyRental": 13.35}},
+            {"id": "ipad", "product": {"itemName": "AppleiPadAir7", "memory": ["128GB", "256GB"], "dailyRental": 6.57}},
+        ]
+        for question, expected in [
+            ("OPPO Find X8 Pro 512GB", ["oppo"]),
+            ("OPPO Find X8 Pro 1TB", ["oppo"]),
+            ("OPPO Find X8 Pro 12GB", []),
+            ("vivo X200 Ultra 512GB", ["vivo"]),
+            ("Apple iPad Air 7 128GB", ["ipad"]),
+            ("OPPO Find X8 Ultra 512GB", []),
+        ]:
+            with self.subTest(question=question):
+                self.assertEqual([row["id"] for row in agent.filter_candidates(question, products)], expected)
+
     @patch.dict("os.environ", {"EMBEDDING_MOCK": "0"})
     def test_model_before_chinese_punctuation(self):
         """验证型号紧邻中文标点时仍能正确识别。"""

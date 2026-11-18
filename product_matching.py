@@ -23,32 +23,40 @@ def has_model_reference(question: str) -> bool:
 def requested_models(question: str, rows: list[dict[str, Any]], *, exact: bool = False) -> list[dict[str, Any]]:
     """Keep the catalogue model mentioned in the question; a base model includes its series."""
     words = model_tokens(question)
-    models = [(row, model_tokens(model_name(row["product"]))) for row in rows]
     matches = []
-    for row, tokens in models:
+    for row in rows:
+        tokens = model_tokens(model_name(row["product"]))
         if not tokens:
             continue
+        model = "".join(tokens)
+        # The first model number defines the family boundary. A bare family may
+        # include variants, while an explicit variant must match the full model.
+        core_size = next((i + 1 for i, token in enumerate(tokens) if token.isdigit()), min(2, len(tokens)))
+        core = "".join(tokens[:core_size])
         for start in range(len(words)):
-            size = 0
-            while size < len(tokens) and start + size < len(words) and words[start + size] == tokens[size]:
-                size += 1
-            # A model must include its generation, when one exists. Otherwise require
-            # at least two words to avoid matching a generic brand in ordinary prose.
-            core = next((i + 1 for i, token in enumerate(tokens) if token.isdigit()), min(2, len(tokens)))
-            if size >= core and (core > 1 or size == len(tokens)):
-                matches.append((row, tokens, size, core))
+            prefix = ""
+            consumed = 0
+            for word in words[start:]:
+                if not model.startswith(prefix + word):
+                    break
+                prefix += word
+                consumed += 1
+            next_word = words[start + consumed] if start + consumed < len(words) else ""
+            # "iPhone18 Pro" is not the base model; "Pro Max" is not Pro.
+            explicit_suffix = next_word.isascii() and next_word.isalpha()
+            if len(prefix) >= len(core) and not (explicit_suffix and prefix in (core, model)):
+                matches.append((row, len(prefix), prefix == model, prefix == core))
     if not matches:
         # An explicit alphanumeric model that is absent from the catalogue must
         # not silently turn into an unrelated recommendation.
         return [] if has_model_reference(question) else rows
-    best = max(size for _, _, size, _ in matches)
-    matching = [row for row, tokens, size, core in matches
-                if size == best and (size == len(tokens) or (not exact and size == core))]
-    return matching
+    best = max(size for _, size, _, _ in matches)
+    return [row for row, size, full, family in matches
+            if size == best and (full or (not exact and family))]
 
 
 def same_model(left: dict[str, Any], right: dict[str, Any]) -> bool:
-    return model_tokens(model_name(left)) == model_tokens(model_name(right))
+    return "".join(model_tokens(model_name(left))) == "".join(model_tokens(model_name(right)))
 
 
 def memory_gb(value: Any) -> int | None:
@@ -67,7 +75,9 @@ def product_memories(product: dict[str, Any]) -> list[int]:
     values = product.get("memory") or []
     if isinstance(values, (str, int)):
         values = [values]
-    return [size for value in values if (size := memory_gb(value)) is not None]
+    # Listings such as "12GB+512GB" encode RAM + storage. Match the storage
+    # component, not the RAM size, when the user asks for a capacity.
+    return [size for value in values if (size := memory_gb(str(value).split("+")[-1])) is not None]
 
 
 def rental(product: dict[str, Any]) -> float | None:

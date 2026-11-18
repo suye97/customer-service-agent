@@ -1,0 +1,148 @@
+{
+  "dataset_version": 1,
+  "evaluation_scope": "offline candidate filtering with fixed catalogue; no vector search or LLM calls",
+  "product_cases": 12,
+  "passed": 12,
+  "exact_set_accuracy": 1.0,
+  "macro_precision": 1.0,
+  "macro_recall": 1.0,
+  "target_contract_cases_not_run": 18,
+  "cases": [
+    {
+      "id": "series-512",
+      "passed": true,
+      "expected_ids": [
+        "p18512",
+        "p18pro512",
+        "p18promax512"
+      ],
+      "actual_ids": [
+        "p18512",
+        "p18pro512",
+        "p18promax512"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "pro-exact",
+      "passed": true,
+      "expected_ids": [
+        "p18pro512"
+      ],
+      "actual_ids": [
+        "p18pro512"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "promax-exact",
+      "passed": true,
+      "expected_ids": [
+        "p18promax512"
+      ],
+      "actual_ids": [
+        "p18promax512"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "standard-only",
+      "passed": true,
+      "expected_ids": [
+        "p18512"
+      ],
+      "actual_ids": [
+        "p18512"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "generation-boundary",
+      "passed": true,
+      "expected_ids": [
+        "p180512"
+      ],
+      "actual_ids": [
+        "p180512"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "missing-generation",
+      "passed": true,
+      "expected_ids": [],
+      "actual_ids": [],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "memory-256",
+      "passed": true,
+      "expected_ids": [
+        "p18256"
+      ],
+      "actual_ids": [
+        "p18256"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "memory-no-match",
+      "passed": true,
+      "expected_ids": [],
+      "actual_ids": [],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "strict-price",
+      "passed": true,
+      "expected_ids": [],
+      "actual_ids": [],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "inclusive-price",
+      "passed": true,
+      "expected_ids": [
+        "p18512"
+      ],
+      "actual_ids": [
+        "p18512"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "other-brand",
+      "passed": true,
+      "expected_ids": [
+        "s25u256"
+      ],
+      "actual_ids": [
+        "s25u256"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "id": "tablet",
+      "passed": true,
+      "expected_ids": [
+        "ipadair128"
+      ],
+      "actual_ids": [
+        "ipadair128"
+      ],
+      "precision": 1.0,
+      "recall": 1.0
+    }
+  ]
+}

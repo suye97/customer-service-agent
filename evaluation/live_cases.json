@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "collection_snapshot": "2026-11-18: 181 Milvus rows, labels from itemName/memory/dailyRental/status",
+  "top_k": 10,
+  "cases": [
+    {"id": "iphone18-pro-512", "question": "iPhone18 Pro 512GB 有哪些？", "relevant_ids": ["2100753098488856576"]},
+    {"id": "iphone18-promax-512", "question": "iPhone18 Pro Max 512GB 有哪些？", "relevant_ids": ["2114619059896082432"]},
+    {"id": "iphone18-series-512", "question": "iPhone18 系列 512GB 推荐", "relevant_ids": ["2100753098488856576", "2114619059896082432"]},
+    {"id": "iphone18-pro-256", "question": "iPhone18 Pro 256GB 日租金30元以内", "relevant_ids": ["2100753098488856576"]},
+    {"id": "iphone18-pro-budget-none", "question": "iPhone18 Pro 512GB 日租金20元以内", "relevant_ids": []},
+    {"id": "iphone18-budget", "question": "iPhone18 512GB 日租金22元以内", "relevant_ids": ["2100753098488856576"]},
+    {"id": "iphone18-promax-budget", "question": "iPhone18 Pro Max 512GB 日租金24元以内", "relevant_ids": ["2114619059896082432"]},
+    {"id": "iphone17-promax-512", "question": "iPhone17 Pro Max 512GB 有哪些？", "relevant_ids": ["2033821829360058368", "2052690378294833152"]},
+    {"id": "iphone17-promax-budget-none", "question": "iPhone17 Pro Max 512GB 日租金19元以内", "relevant_ids": []},
+    {"id": "iphone16-standard-512", "question": "iPhone16 标准版 512GB", "relevant_ids": ["1980885076106272768", "1985614387687473152", "1985614409795649536", "1988176633802698752"]},
+    {"id": "iphone16-pro-budget", "question": "iPhone16 Pro 512GB 日租金10元以内", "relevant_ids": ["1980885271690862592", "1985614402266873856", "1988181285529686016"]},
+    {"id": "iphone16-promax-memory-none", "question": "iPhone16 Pro Max 128GB", "relevant_ids": []},
+    {"id": "oppo-findx8-pro-512", "question": "OPPO Find X8 Pro 512GB 推荐", "relevant_ids": ["1853698790221733888"]},
+    {"id": "vivo-x200-ultra-512", "question": "vivo X200 Ultra 512GB 推荐", "relevant_ids": ["1915289737886560256"]},
+    {"id": "ipad-air7-128", "question": "Apple iPad Air 7 128GB 有哪些？", "relevant_ids": ["2020787032953495552", "2020794485707415552"]},
+    {"id": "iphone181-no-model", "question": "iPhone181 512GB 有吗？", "relevant_ids": []},
+    {"id": "iphone16-promax-1tb", "question": "iPhone16 Pro Max 1TB", "relevant_ids": ["1980885602155880448", "1985614618315472896", "1985614627396141056", "1988181828360704000"]},
+    {"id": "iphone16-standard-budget", "question": "iPhone16 标准版 512GB 日租金7元以内", "relevant_ids": ["1985614387687473152", "1985614409795649536", "1988176633802698752"]},
+    {"id": "oppo-findx8-pro-1tb", "question": "OPPO Find X8 Pro 1TB 有吗？", "relevant_ids": ["1853698790221733888"]},
+    {"id": "latest-apple", "question": "最新的苹果手机有哪些？", "relevant_ids": ["2100753098488856576", "2114619059896082432"]}
+  ]
+}

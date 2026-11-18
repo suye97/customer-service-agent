@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Agent 工程实战面试手册 · 3C 租赁客服</title>
+<style>
+:root{--paper:#edf3f5;--surface:#fff;--ink:#18313b;--muted:#526a72;--line:#cbd9dd;--teal:#116b78;--teal-dark:#0b4f5a;--signal:#a7462d;--soft:#dcebef;--focus:#e8a447}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Source Han Sans SC","Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75}button,input{font:inherit}a{color:var(--teal-dark)}a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}::selection{background:#b8dfe4;color:var(--ink)}
+.topline{height:9px;background:repeating-linear-gradient(90deg,var(--teal-dark) 0 52px,var(--teal) 52px 104px,var(--paper) 104px 112px)}.shell{max-width:1320px;margin:auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:clamp(28px,5vw,88px);padding:0 clamp(22px,4vw,64px) 100px}.rail{position:sticky;top:0;align-self:start;height:100vh;padding:38px 0 28px;border-right:1px solid var(--line);display:flex;flex-direction:column}.brand{font-size:14px;font-weight:800;letter-spacing:.02em;color:var(--teal-dark);line-height:1.4}.brand span{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:7px}.rail nav{display:grid;gap:4px;margin-top:54px}.rail nav a{text-decoration:none;color:var(--muted);font-size:14px;padding:8px 14px 8px 0;border-right:3px solid transparent}.rail nav a:hover,.rail nav a:focus-visible{color:var(--teal-dark);border-color:var(--teal)}.rail-note{margin-top:auto;padding:18px 18px 18px 0;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.65}.main{min-width:0}.hero{padding:72px 0 46px;border-bottom:2px solid var(--ink)}.hero h1{font-size:clamp(36px,5vw,68px);letter-spacing:-.055em;line-height:1.15;margin:0 0 28px;max-width:800px;font-weight:800}.hero p{font-size:17px;max-width:710px;margin:0;color:var(--muted)}.hero .edition{display:inline-block;font-size:12px;color:var(--teal-dark);font-weight:700;border-bottom:2px solid var(--teal);padding-bottom:4px;margin-bottom:22px}.measure{padding:44px 0 38px;border-bottom:1px solid var(--line)}.measure h2,.chapter h2{font-size:clamp(24px,3vw,34px);letter-spacing:-.035em;line-height:1.25;margin:0 0 20px}.measure p{max-width:760px;margin:12px 0;color:var(--ink)}.formula{background:var(--ink);color:#f3fafb;border-left:7px solid var(--teal);padding:22px 26px;margin:26px 0;max-width:800px;display:grid;gap:11px;font-family:Consolas,"SFMono-Regular",monospace;font-size:14px;line-height:1.65;overflow-x:auto}.formula strong{color:#83d5d9;font-weight:700}.measure small{display:block;max-width:760px;color:var(--muted);font-size:13px}.caution{border-left:4px solid var(--signal);padding:13px 18px;margin-top:28px;background:#fff8f5;color:#633d35;font-size:14px;max-width:800px}.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:35px 0 16px}.search{min-width:min(100%,310px);flex:1;max-width:500px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:4px;color:var(--ink)}.action{padding:10px 15px;border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:4px;cursor:pointer}.action:hover{background:var(--ink);color:#fff}.count{font-size:13px;color:var(--muted);margin-left:auto}.chapter{padding-top:52px;scroll-margin-top:22px}.chapter-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:12px}.chapter h2{margin:0}.chapter-head p{margin:0;color:var(--muted);font-size:13px}.qa{border-bottom:1px solid var(--line);background:transparent}.qa summary{list-style:none;cursor:pointer;display:flex;align-items:flex-start;gap:18px;padding:22px 4px;font-weight:650;line-height:1.5;font-size:17px}.qa summary::-webkit-details-marker{display:none}.qa summary::before{content:"+";display:grid;place-items:center;flex:0 0 28px;height:28px;border:1px solid var(--teal);border-radius:50%;color:var(--teal);font-family:Consolas,monospace;font-size:18px;line-height:1;margin-top:1px}.qa[open] summary::before{content:"−";background:var(--teal);color:white}.qa[open]{background:rgba(255,255,255,.62)}.answer{padding:0 35px 26px 50px;max-width:880px;font-size:15px}.answer p{margin:0 0 12px}.answer p:last-child{margin-bottom:0}.answer .follow{color:var(--teal-dark);font-size:14px;border-top:1px dashed var(--line);padding-top:12px;margin-top:18px}.answer code,.measure code{font-family:Consolas,"SFMono-Regular",monospace;background:var(--soft);padding:2px 5px;border-radius:3px;font-size:.92em}.callout{margin:56px 0 0;padding:25px 28px;background:var(--soft);border-top:4px solid var(--teal-dark);font-size:14px}.callout h2{margin:0 0 9px;font-size:20px}.callout p{margin:0;max-width:780px}.footer{color:var(--muted);font-size:12px;padding:48px 0 0}.empty{display:none;padding:28px;color:var(--muted);border:1px dashed var(--line)}
+@media(max-width:850px){.shell{display:block;padding:0 22px 70px}.rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:20px 0 13px}.brand span,.rail-note{display:none}.rail nav{display:flex;overflow-x:auto;margin-top:15px;gap:18px;padding-bottom:3px}.rail nav a{white-space:nowrap;padding:3px 0;border-right:0;border-bottom:2px solid transparent}.hero{padding:48px 0 35px}.chapter{padding-top:38px}.chapter-head{display:block}.chapter-head p{margin-top:5px}.answer{padding-left:50px;padding-right:15px}.count{width:100%;margin-left:0}}@media(max-width:480px){.hero h1{font-size:36px}.hero p{font-size:15px}.formula{padding:17px 14px;font-size:12px}.qa summary{font-size:16px;gap:12px}.answer{padding-left:44px;font-size:14px}.controls{gap:8px}.search{min-width:100%}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="topline" aria-hidden="true"></div>
+<div class="shell">
+  <aside class="rail" aria-label="章节导航">
+    <div class="brand">Agent 工程实战手册<span>3C 租赁客服 · 面试练习版</span></div>
+    <nav>
+      <a href="#metrics">先讲清评测指标</a><a href="#routing">意图与编排</a><a href="#retrieval">检索与商品事实</a><a href="#tools">Tool 与鉴权</a><a href="#memory">会话与持久化</a><a href="#reliability">可靠性与排障</a><a href="#evaluation">评测与复盘</a><a href="#frameworks">LangChain / LangGraph</a>
+    </nav>
+    <p class="rail-note">用真实项目里的决策解释“为什么”，比背术语更有说服力。每题先自己回答，再展开参考答法。</p>
+  </aside>
+  <main class="main">
+    <header class="hero"><span class="edition">面试练习 · 34 个现场问题</span><h1>把 Agent 从演示<br>讲到生产现场。</h1><p>围绕 3C 租赁客服的商品检索、订单与流水查询、身份鉴权、会话恢复和失败处理。每题附参考答法与可能的追问。</p></header>
+    <section id="metrics" class="measure" aria-labelledby="metric-title">
+      <h2 id="metric-title">先把 Recall@10 和 MRR 讲明白</h2>
+      <p><strong>Recall@10（前 10 召回率）</strong>：某个问题真正相关的商品中，有多少出现在向量检索的前 10 个结果里。假设相关商品为 A、B、C，前 10 只找到 A、B，这题的 Recall@10 就是 <strong>2/3</strong>。</p>
+      <p><strong>MRR（平均倒数排名）</strong>：每题只看<strong>第一个</strong>相关商品出现的名次。排第 1 得 1，排第 2 得 1/2，排第 5 得 1/5；没进结果得 0。把所有有相关商品的题目取平均，就是 MRR。</p>
+      <div class="formula" role="note" aria-label="指标计算示例"><span><strong>单题 Recall@10</strong> = 前 10 命中的相关商品数 ÷ 该题相关商品总数</span><span><strong>单题倒数排名</strong> = 1 ÷ 第一个相关商品的名次</span><span><strong>项目实测</strong> = 16 条正例的逐题平均：Recall@10 ≈ 0.839，MRR = 0.750</span></div>
+      <small>这次真实 Milvus 评测共 20 题，其中 16 题存在相关商品；4 个“本就没有符合商品”的负例不进入原始向量 Recall@10 / MRR 分母，但会进入最终候选集合的正确性统计。过滤后的 20/20 完全匹配，不能写成向量 Recall@10 = 100%。</small>
+      <p class="caution"><strong>面试时的边界：</strong>Recall@10 衡量“有没有捞到”，MRR 衡量“第一个相关结果靠不靠前”；二者都不能单独证明最终回答没有幻觉，也不能证明订单鉴权正确。</p>
+    </section>
+    <div class="controls"><input id="search" class="search" type="search" placeholder="搜索题目或答案，例如：幂等、退款、MRR" aria-label="搜索面试题"><button class="action" id="expand" type="button">展开全部</button><button class="action" id="collapse" type="button">收起全部</button><span class="count" id="count" aria-live="polite">34 题</span></div><p class="empty" id="empty">没有匹配的题目。试试“检索”“鉴权”或“会话”。</p>
+
+    <section id="routing" class="chapter" aria-labelledby="routing-title"><div class="chapter-head"><h2 id="routing-title">意图与流程编排</h2><p>规则、模型与 LangGraph 的边界</p></div>
+      <details class="qa"><summary>1. 为什么订单号、流水号优先走规则，而不是全部交给模型分类？</summary><div class="answer"><p>明确标识符是高精度信号，规则可解释、可测试且不会因模型波动改变。先识别订单号或支付流水号，再由模型处理“我刚付了钱”这类模糊语句；识别结果仍需参数校验和用户归属核验。</p><p class="follow">追问：订单号格式升级了怎么办？答：把规则放在版本化配置与回归样本中，不在提示词里散落复制。</p></div></details>
+      <details class="qa"><summary>2. 一句话同时问商品价格和订单物流，图怎么走？</summary><div class="answer"><p>先拆成商品与物流两个意图；商品可公开查询，物流必须先鉴权并确定具体订单。若缺订单引用，先追问，不把向量命中的商品误当作用户已购买的商品。结果汇总时标明每条事实来自哪个 Tool。</p><p class="follow">追问：两个 Tool 一个成功一个超时？答：分别呈现已核实部分与未完成部分，不用成功结果补全失败结果。</p></div></details>
+      <details class="qa"><summary>3. 低置信度路由为何要追问，而不是挑分数最高的 Agent？</summary><div class="answer"><p>最高分只表示相对排序，不表示足够确定。像“那个怎么还没到”可能指商品、订单或物流；错误路由会触发不必要的业务查询。设置校准过的阈值和冲突规则，追问最少的关键槽位，例如订单号或商品型号。</p><p class="follow">追问：如何定阈值？答：在标注意图集上看误路由成本、澄清率与实际业务风险，不能凭感觉写 0.8。</p></div></details>
+      <details class="qa"><summary>4. LangGraph 比单个大 Prompt 多解决了什么？</summary><div class="answer"><p>它把检索、鉴权、业务查询、校验、生成和人工转接拆成可观察的节点与条件边。每个节点有输入输出约束；失败能定位到具体阶段，待补参数或人工确认也可从 checkpoint 恢复。</p><p class="follow">追问：图是否越细越好？答：按需要独立重试、授权或观测的边界拆节点，避免把每个字符串处理都做成节点。</p></div></details>
+    </section>
+
+    <section id="retrieval" class="chapter" aria-labelledby="retrieval-title"><div class="chapter-head"><h2 id="retrieval-title">检索与商品事实</h2><p>Milvus 召回不等于交易事实</p></div>
+      <details class="qa"><summary>5. Milvus 向量检索和商品业务接口分别负责什么？</summary><div class="answer"><p>向量检索负责找可能相关的候选商品；业务接口负责当前上架状态、SKU 规格、价格、押金与库存。推荐前对候选做型号、容量等硬条件过滤，再查询业务事实；不能因为向量相似就推断商品可租。</p><p class="follow">追问：业务接口价格与向量库不一致？答：使用业务接口价格，并记录向量索引需要更新。</p></div></details>
+      <details class="qa"><summary>6. 为什么“iPhone 18 Pro”不能直接子串匹配“Pro Max”？</summary><div class="answer"><p>Pro 是 Pro Max 的前缀，子串判断会混淆两个 SKU 家族。应规范化空格与大小写、识别代际边界和明确版本；只说“iPhone 18”可按系列处理，明确说 Pro 时必须排除 Pro Max。</p><p class="follow">追问：`iPhone180` 呢？答：代际数字必须整体比较，不能让 `18` 命中 `180`。</p></div></details>
+      <details class="qa"><summary>7. `12GB+512GB` 这种规格怎样处理？</summary><div class="answer"><p>先识别这是运行内存加存储容量的组合，用户说“512GB”通常指后面的存储；不能把前面的 12GB 当存储匹配。最好在入库时结构化为 RAM 与 storage 字段，查询时按明确槽位过滤；历史数据可在读取层做兼容解析。</p><p class="follow">追问：用户只说“12GB 内存”怎么办？答：标注 RAM 槽位，不按 512GB 存储去匹配。</p></div></details>
+      <details class="qa"><summary>8. 商品变更后如何同步向量库？</summary><div class="answer"><p>以商品 ID 作为稳定主键，对名称、规格、说明等影响语义的字段重新生成向量并 upsert；价格、库存等高频动态字段优先由业务接口读取。下架时及时移出候选或在检索后强制拦截，不能只等索引定时重建。</p><p class="follow">追问：怎样避免每次全量重算？答：根据业务变更事件或内容版本只处理变化的商品，同时设置补偿性的全量对账。</p></div></details>
+      <details class="qa"><summary>9. SPU、SKU 和向量索引的粒度怎么选？</summary><div class="answer"><p>SPU 适合语义召回“哪款机型”，SKU 才承载容量、颜色、成色与实时价格。可按 SPU 或商品说明建向量，再用业务 SKU 列表过滤；若每个 SKU 文案差异很大，才考虑 SKU 级向量。无论哪种，最终展示必须落到可核验的业务 ID。</p><p class="follow">追问：同款不同容量有多个报价？答：给出明确 SKU 与对应报价，不能拿最低价替代全部容量。</p></div></details>
+    </section>
+
+    <section id="tools" class="chapter" aria-labelledby="tools-title"><div class="chapter-head"><h2 id="tools-title">Tool 与用户鉴权</h2><p>模型提出查询，服务端决定能否执行</p></div>
+      <details class="qa"><summary>10. 如何设计订单查询 Tool 的参数？</summary><div class="answer"><p>使用受控 schema，例如订单号、查询范围和分页参数；拒绝任意 URL、SQL、用户 ID 等模型自由拼出的参数。登录用户 ID 由服务端鉴权上下文注入，不能由模型或请求体决定。</p><p class="follow">追问：模型传了别人的 userId？答：忽略或拒绝，绝不作为权限依据。</p></div></details>
+      <details class="qa"><summary>11. 登录鉴权和订单归属鉴权有什么不同？</summary><div class="answer"><p>登录鉴权证明请求者是谁；归属鉴权证明这张订单属于请求者。二者都要做，并在业务服务或 Tool 网关校验。浏览器 Cookie 仅用于会话续接时，不能代替真实登录身份。</p><p class="follow">追问：同浏览器切换账号？答：按新 userId 隔离会话和缓存，旧账号订单引用不能复用。</p></div></details>
+      <details class="qa"><summary>12. 支付流水与物流查询为何还要单独核验归属？</summary><div class="answer"><p>知道流水号或运单号不代表有权查看。应先把流水或物流记录关联到订单及登录用户，再返回可展示字段；跨用户查询不能泄露金额、收件地址、是否存在等敏感细节。</p><p class="follow">追问：物流服务只返回运单号怎么办？答：先在订单域校验归属，再按受控运单号查物流，并核对关联关系。</p></div></details>
+      <details class="qa"><summary>13. Tool 超时、查无记录和 5xx 能用同一段兜底话术吗？</summary><div class="answer"><p>不能。查无记录是确定性业务结果；超时是不知道结果，适合有限重试与稍后查询；5xx 需要记录故障并转人工或提示服务不可用。把超时说成“没有订单”会制造错误业务事实。</p><p class="follow">追问：重试几次？答：按幂等性、接口超时预算与退避策略设置上限，不能无限重试。</p></div></details>
+      <details class="qa"><summary>14. 用户要求退款，Agent 应调用退款 Tool 吗？</summary><div class="answer"><p>在这个目标业务流程中不自动退款。Agent 识别诉求、核验登录态和可引用的订单，提供人工服务转接所需的最少上下文；实际退款由人工按业务流程确认。不能把“已转接”说成“已退款”。</p><p class="follow">追问：人工工单创建失败？答：如实说明尚未转接成功，提供可用的人工渠道，不伪造工单号。</p></div></details>
+    </section>
+
+    <section id="memory" class="chapter" aria-labelledby="memory-title"><div class="chapter-head"><h2 id="memory-title">会话与持久化</h2><p>能恢复流程，也要防止旧事实复活</p></div>
+      <details class="qa"><summary>15. MySQL checkpointer 存什么，不存什么？</summary><div class="answer"><p>保存 LangGraph 的 thread_id、节点状态、待补参数、当前商品或订单引用以及最近对话，使进程重启后能续接。不要把价格、库存、支付状态当成永久真值；下一轮需要重新查业务接口。敏感数据按最小化与保留期管理。</p><p class="follow">追问：为什么不只存聊天文本？答：文本无法可靠表达流程停在哪个节点、哪个参数待补或 Tool 是否已执行。</p></div></details>
+      <details class="qa"><summary>16. thread_id 如何设计，避免跨用户串会话？</summary><div class="answer"><p>服务端由可信登录 userId 与会话 ID 生成或映射 thread_id，查询 checkpoint 时同时校验用户身份。不能直接采用前端传来的 userId，也不能仅凭匿名 Cookie 访问真实订单状态。</p><p class="follow">追问：用户退出登录？答：失效会话绑定；再次登录按身份恢复或创建会话，不能借旧 Cookie 读取他人状态。</p></div></details>
+      <details class="qa"><summary>17. 长对话为什么要保留“焦点”而不只做摘要？</summary><div class="answer"><p>摘要容易漏掉精确 SKU、订单引用或待补容量。保留最近几轮原文与结构化焦点，早期内容再压缩为摘要；动态金额和状态不写入可长期复用的摘要。</p><p class="follow">追问：用户说“那 256G 呢”？答：沿用当前机型焦点，仅更新容量槽位，并重新查询商品事实。</p></div></details>
+      <details class="qa"><summary>18. checkpoint 恢复后如何防止重复执行 Tool？</summary><div class="answer"><p>只读查询可在预算内重试；有副作用的 Tool 必须用业务幂等键与状态机防重。图的 checkpoint 能恢复流程，但不能替代业务系统的幂等约束和事务边界。人工转接也要防止重复建工单。</p><p class="follow">追问：节点已执行但 checkpoint 写入失败？答：以业务幂等记录作为最终依据，恢复时先核对执行结果。</p></div></details>
+    </section>
+
+    <section id="reliability" class="chapter" aria-labelledby="reliability-title"><div class="chapter-head"><h2 id="reliability-title">可靠性与线上排障</h2><p>让回答可核验，让失败可定位</p></div>
+      <details class="qa"><summary>19. 怎样约束模型不编造订单号、金额和状态？</summary><div class="answer"><p>将 Tool 结果作为结构化证据，生成后校验回答中的 ID、金额、状态是否存在于已授权的返回数据。不存在或冲突时不给模型自由补全，应返回无法核实或转人工；提示词只是辅助，不是最终防线。</p><p class="follow">追问：候选商品中的描述含恶意指令？答：作为不可信数据处理，不能让它改变系统指令或工具权限。</p></div></details>
+      <details class="qa"><summary>20. 为什么向量命中了商品，页面却说没有？怎么定位？</summary><div class="answer"><p>沿链路分别记录原始向量 Top-K、型号与容量过滤后的候选、业务接口核验结果和模型选中的 ID。项目实测发现 OPPO、vivo、iPad 的相关商品已进入 Top-10，却被型号连写和“12GB+512GB”解析误删；修正过滤后，20 条标注查询的最终候选集合由 16/20 提升到 20/20。</p><p class="follow">追问：这能说明向量召回也提升了吗？答：不能，原始 Recall@10 仍约 0.839，修复发生在召回之后。</p></div></details>
+      <details class="qa"><summary>21. 商品价格变了，但向量库还是旧价，如何避免错误承诺？</summary><div class="answer"><p>把向量库价格视为参考字段；展示前调用商品业务接口取当前报价、押金与库存，无法核实时不报确定价格。同步任务可更新索引，但不能把“同步及时”作为唯一正确性保障。</p><p class="follow">追问：业务接口超时？答：可展示机型信息，但明确价格未核实，不使用旧索引价冒充实时价。</p></div></details>
+      <details class="qa"><summary>22. 服务上线后健康检查 200，聊天仍 503，怎么查？</summary><div class="answer"><p>健康检查只证明进程能响应。分别检查 Embedding 密钥和维度、Milvus URI/集合、向量模型一致性、LLM 返回格式、业务 Tool 连通性与超时；按请求 ID 串联节点日志，避免仅凭 200 健康状态判断全链路可用。</p><p class="follow">追问：如何减少排障暴露隐私？答：日志保留耗时、状态码、脱敏的标识符和节点名，不写密钥与完整订单信息。</p></div></details>
+    </section>
+
+    <section id="evaluation" class="chapter" aria-labelledby="evaluation-title"><div class="chapter-head"><h2 id="evaluation-title">评测与复盘</h2><p>指标先定义对象，再谈数字</p></div>
+      <details class="qa"><summary>23. Recall@10 与 MRR 的区别是什么？</summary><div class="answer"><p>Recall@10 看所有相关商品有多少进入前 10；MRR 只看第一个相关商品的名次。前 10 找到 3/4 个相关商品，Recall@10 是 0.75；如果第一个排在第 2，倒数排名是 0.5。两者反映覆盖与首个命中的排序，不能互相替代。</p><p class="follow">追问：没有相关商品的负例怎么算？答：通常不进入这两项分母，另测“无结果时不乱推荐”的正确率。</p></div></details>
+      <details class="qa"><summary>24. 为什么离线过滤 12/12 不等于真实 Milvus 召回 100%？</summary><div class="answer"><p>离线用固定候选池，跳过 Embedding 和 Milvus，只测过滤函数。真实评测要对当前集合人工标注相关 ID，实际生成向量并查询 Top-K。此项目的 20 题真实评测里，最终候选 20/20 与标注集合一致，但原始向量 Recall@10 约 0.839。</p><p class="follow">追问：最终候选为何比原始 Top-10 好？答：项目对明确型号额外查询集合补全候选，两个阶段须分开报告。</p></div></details>
+      <details class="qa"><summary>25. 评测集如何避免只测“容易的成功样本”？</summary><div class="answer"><p>按意图、型号版本、容量、价格边界、查无结果、跨用户鉴权、多意图、Tool 超时与转人工分层抽样。每题固定期望商品 ID 或业务动作，标注版本和数据快照；失败样本保留为回归用例，不因修复而删掉。</p><p class="follow">追问：商品数据更新后标签怎么办？答：重新核对上架、规格、价格和 ID，再重跑，不能沿用过期真值。</p></div></details>
+      <details class="qa"><summary>26. 面试官问“你这个项目哪些已上线、哪些只是设计”，怎么回答？</summary><div class="answer"><p>按证据分层说明：当前 Python 仓库可运行 Milvus 商品检索、LangGraph 流程和 SQLite checkpoint，订单/退款是模拟流程；MySQL、真实 Java Tool、登录与归属鉴权、退款转人工若在其他服务已落地，就展示其接口与测试证据，否则明确说是目标设计。不要把模拟订单测试写成真实交易能力。</p><p class="follow">追问：最有说服力的演示？答：真实集合的标注查询、逐题失败复盘、跨用户拒绝用例和工具调用审计。</p></div></details>
+    </section>
+
+    <section id="frameworks" class="chapter" aria-labelledby="frameworks-title"><div class="chapter-head"><h2 id="frameworks-title">LangChain / LangGraph 专题</h2><p>从组件组合到有状态工作流</p></div>
+      <details class="qa"><summary>27. LangChain 的 Runnable 链与 LangGraph 的图，分别适合什么场景？</summary><div class="answer"><p>Runnable 适合输入到输出较明确的组合，例如提示词、模型、结构化解析、检索器的顺序或并行处理；可统一调用、批处理和流式输出。LangGraph 适合有条件分支、循环、待补参数、人工介入和跨轮恢复的流程。可以把一个 Runnable 作为图中的节点，不必二选一。</p><p class="follow">追问：只做一次商品摘要需要图吗？答：通常先用简单 Runnable；当路由、状态与恢复成为真实需求再上图。</p></div></details>
+      <details class="qa"><summary>28. LCEL 中如何组合检索、并行输入与结构化输出？</summary><div class="answer"><p>用 Runnable 组合把用户问题和检索证据送入提示词、模型及解析器；独立输入可以并行生成，但有依赖的步骤仍需顺序执行。模型输出必须经过 schema 校验，商品 ID 只能从候选列表中选择，解析成功也不等于业务事实正确。</p><p class="follow">追问：并行检索商品与订单安全吗？答：订单查询先完成登录和归属鉴权；不能为了并行绕过权限节点。</p></div></details>
+      <details class="qa"><summary>29. bind_tools 与真正执行 Tool 是同一回事吗？</summary><div class="answer"><p>不是。绑定工具 schema 让模型能够提出带参数的调用；服务端执行前仍要校验工具白名单、参数、登录身份和数据归属。执行结果以对应的工具调用 ID 回填，再让模型生成回答。模型提出“退款”不代表系统获准执行退款。</p><p class="follow">追问：ToolNode 能代替鉴权吗？答：不能，鉴权必须在工具实现或受控网关里执行。</p></div></details>
+      <details class="qa"><summary>30. LangGraph State 中的 reducer 解决什么问题？</summary><div class="answer"><p>节点返回的是状态更新；普通字段默认由新值覆盖，消息列表这类需要累积的字段可配置 reducer（如 add_messages）。并行节点若同时更新同一个没有合适 reducer 的字段，会产生冲突或丢数据。State 应保存必要引用和流程状态，避免把巨大检索结果无限累积。</p><p class="follow">追问：价格和库存适合累积在 State 吗？答：不适合长期当真值，后续轮次需重新查业务接口。</p></div></details>
+      <details class="qa"><summary>31. 条件边与 Command 路由有什么区别？</summary><div class="answer"><p>条件边根据当前 State 选择下一个节点，适合显式的路由函数；Command 可以在节点结果中同时表达状态更新与下一步去向。无论选择哪一种，都要为无法识别的意图、工具失败和澄清请求设置合法出口，避免图走到不存在的节点。</p><p class="follow">追问：多意图如何路由？答：先决定拆分还是追问，再进入受权限约束的分支，不能只取模型第一个标签。</p></div></details>
+      <details class="qa"><summary>32. interrupt / resume 和 checkpointer 要一起怎么用？</summary><div class="answer"><p>图编译时绑定 checkpointer，调用时提供稳定的 thread_id；节点调用 interrupt 暂停并保存状态，用户回应后用相同线程和 resume 值继续。恢复可能重新执行中断节点中 interrupt 之前的代码，因此副作用应放在确认之后，并用业务幂等键保护。</p><p class="follow">追问：只传相同用户 ID 足够吗？答：还需会话隔离和服务端登录校验，避免不同会话串状态。</p></div></details>
+      <details class="qa"><summary>33. 什么时候用子图或多 Agent，什么时候只用一个图？</summary><div class="answer"><p>商品、订单、流水流程若各有独立状态、工具和测试边界，可以拆子图；主图负责鉴权、路由、汇总与失败兜底。多 Agent 会增加消息转交、权限和观测成本，不能只因任务名称不同就拆多个会自行行动的模型。</p><p class="follow">追问：子图返回订单结果给主图时？答：只传已授权、已校验的结构化结果与必要引用，不泄露完整内部状态。</p></div></details>
+      <details class="qa"><summary>34. 怎样测试和观测一个 LangGraph 工作流？</summary><div class="answer"><p>分别测节点纯逻辑、条件边、工具异常、checkpoint 恢复与端到端请求；使用测试替身覆盖超时、空结果和跨用户拒绝。线上记录每个节点的耗时、路由决策、工具状态和脱敏 trace ID，流式输出时区分模型片段、工具事件和最终事实。</p><p class="follow">追问：图测试全通过就能说业务链路正常吗？答：不能，还需用真实依赖做小规模冒烟和标注集评测，并报告未覆盖的接口。</p></div></details>
+    </section>
+    <div class="callout"><h2>练习方法</h2><p>先用 45 秒说出结论、设计依据和失败边界；再展开每题核对。面试回答尽量引用真实记录：20 条商品查询、Recall@10 约 0.839、MRR 0.750，以及 4 个过滤失败如何定位并修复。没有实现的业务接口要明确说明。</p></div>
+    <footer class="footer">Agent 工程实战面试手册 · 本页可离线打开，搜索和展开功能不依赖外部服务。</footer>
+  </main>
+</div>
+<script>
+(() => {
+  const search = document.querySelector('#search');
+  const groups = [...document.querySelectorAll('.chapter')];
+  const cards = [...document.querySelectorAll('.qa')];
+  const count = document.querySelector('#count');
+  const empty = document.querySelector('#empty');
+  search.addEventListener('input', () => {
+    const term = search.value.trim().toLocaleLowerCase();
+    let visible = 0;
+    for (const card of cards) {
+      const match = card.textContent.toLocaleLowerCase().includes(term);
+      card.hidden = !match;
+      if (match) visible++;
+    }
+    for (const group of groups) group.hidden = ![...group.querySelectorAll('.qa')].some(card => !card.hidden);
+    count.textContent = `${visible} / ${cards.length} 题`;
+    empty.style.display = visible ? 'none' : 'block';
+  });
+  document.querySelector('#expand').addEventListener('click', () => { for (const card of cards) if (!card.hidden) card.open = true; });
+  document.querySelector('#collapse').addEventListener('click', () => { for (const card of cards) card.open = false; });
+})();
+</script>
+</body>
+</html>

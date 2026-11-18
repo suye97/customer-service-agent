@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "scope": "offline product filtering plus target business contracts",
+  "catalog": [
+    {"id": "p18pro512", "product": {"itemName": "iPhone18Pro", "name": "iPhone 18 Pro", "memory": ["512GB"], "dailyRental": 21.34, "status": "SHELVES"}, "category_paths": ["手机 / 苹果"]},
+    {"id": "p18promax512", "product": {"itemName": "iPhone18ProMax", "name": "iPhone 18 Pro Max", "memory": ["512GB"], "dailyRental": 23.51, "status": "SHELVES"}, "category_paths": ["手机 / 苹果"]},
+    {"id": "p18512", "product": {"itemName": "iPhone18", "name": "iPhone 18", "memory": ["512GB"], "dailyRental": 18.0, "status": "SHELVES"}, "category_paths": ["手机 / 苹果"]},
+    {"id": "p18256", "product": {"itemName": "iPhone18", "name": "iPhone 18", "memory": ["256GB"], "dailyRental": 17.0, "status": "SHELVES"}, "category_paths": ["手机 / 苹果"]},
+    {"id": "p18pro256", "product": {"itemName": "iPhone18Pro", "name": "iPhone 18 Pro", "memory": ["256GB"], "dailyRental": 19.0, "status": "SHELVES"}, "category_paths": ["手机 / 苹果"]},
+    {"id": "p180512", "product": {"itemName": "iPhone180", "name": "iPhone 180", "memory": ["512GB"], "dailyRental": 18.0, "status": "SHELVES"}, "category_paths": ["手机 / 苹果"]},
+    {"id": "s25u256", "product": {"itemName": "GalaxyS25Ultra", "name": "Galaxy S25 Ultra", "memory": ["256GB"], "dailyRental": 15.0, "status": "SHELVES"}, "category_paths": ["手机 / 三星"]},
+    {"id": "ipadair128", "product": {"itemName": "iPadAir", "name": "iPad Air", "memory": ["128GB"], "dailyRental": 12.0, "status": "SHELVES"}, "category_paths": ["平板 / 苹果"]}
+  ],
+  "product_cases": [
+    {"id": "series-512", "question": "iPhone18 512G 日租金30元以下有哪些？", "expected_ids": ["p18pro512", "p18promax512", "p18512"]},
+    {"id": "pro-exact", "question": "有没有 iPhone 18 Pro 512GB？", "expected_ids": ["p18pro512"]},
+    {"id": "promax-exact", "question": "iPhone18 Pro Max 512G", "expected_ids": ["p18promax512"]},
+    {"id": "standard-only", "question": "iPhone18 标准版 512GB", "expected_ids": ["p18512"]},
+    {"id": "generation-boundary", "question": "查 iPhone180 512G", "expected_ids": ["p180512"]},
+    {"id": "missing-generation", "question": "查 iPhone181 512G", "expected_ids": []},
+    {"id": "memory-256", "question": "iPhone18 256GB 日租金18元以内", "expected_ids": ["p18256"]},
+    {"id": "memory-no-match", "question": "iPhone18 Pro 1TB", "expected_ids": []},
+    {"id": "strict-price", "question": "iPhone18 512G 日租金18元以下", "expected_ids": []},
+    {"id": "inclusive-price", "question": "iPhone18 512G 日租金18元以内", "expected_ids": ["p18512"]},
+    {"id": "other-brand", "question": "Galaxy S25 Ultra 256G 有吗？", "expected_ids": ["s25u256"]},
+    {"id": "tablet", "question": "iPad Air 128GB 日租金20元以内", "expected_ids": ["ipadair128"]}
+  ],
+  "target_contract_cases": [
+    {"id": "order-owned", "question": "查订单 ZL-1001", "identity": "user-A", "fixture": "ZL-1001 belongs to user-A", "expected_route": "order", "expected_action": "return-owned-order"},
+    {"id": "order-other-user", "question": "查订单 ZL-2002", "identity": "user-A", "fixture": "ZL-2002 belongs to user-B", "expected_route": "order", "expected_action": "deny-without-order-details"},
+    {"id": "order-unknown", "question": "查订单 ZL-9999", "identity": "user-A", "fixture": "order absent", "expected_route": "order", "expected_action": "not-found-no-invention"},
+    {"id": "order-anonymous", "question": "查我的订单", "identity": null, "fixture": "not logged in", "expected_route": "order", "expected_action": "login-required"},
+    {"id": "payment-transaction", "question": "支付流水号 PAY-1001 到账了吗？", "identity": "user-A", "fixture": "PAY-1001 belongs to user-A", "expected_route": "payment", "expected_action": "return-owned-transaction"},
+    {"id": "payment-synonym", "question": "我刚付钱了，怎么还显示没支付？", "identity": "user-A", "fixture": "no transaction reference", "expected_route": "payment", "expected_action": "ask-for-identifier"},
+    {"id": "payment-other-user", "question": "查流水 PAY-2002", "identity": "user-A", "fixture": "PAY-2002 belongs to user-B", "expected_route": "payment", "expected_action": "deny-without-payment-details"},
+    {"id": "logistics-owned", "question": "订单 ZL-1001 物流到哪里了？", "identity": "user-A", "fixture": "order and shipment belong to user-A", "expected_route": "logistics", "expected_action": "return-owned-shipment"},
+    {"id": "logistics-other-user", "question": "帮我查运单 KD-2002", "identity": "user-A", "fixture": "shipment belongs to user-B", "expected_route": "logistics", "expected_action": "deny-without-shipment-details"},
+    {"id": "ambiguous-reference", "question": "我那台怎么还没到？", "identity": "user-A", "fixture": "multiple active orders", "expected_route": "clarify", "expected_action": "ask-which-order"},
+    {"id": "multi-intent", "question": "iPhone18 有货吗？再查一下订单 ZL-1001", "identity": "user-A", "fixture": "product and order intent", "expected_route": "multi-intent", "expected_action": "split-or-clarify-before-tools"},
+    {"id": "refund-handoff", "question": "订单 ZL-1001 我要退款", "identity": "user-A", "fixture": "order belongs to user-A", "expected_route": "refund", "expected_action": "human-handoff-no-automatic-refund"},
+    {"id": "refund-other-user", "question": "把 ZL-2002 取消了", "identity": "user-A", "fixture": "order belongs to user-B", "expected_route": "refund", "expected_action": "deny-without-order-details"},
+    {"id": "tool-timeout", "question": "查订单 ZL-1001", "identity": "user-A", "fixture": "order tool times out", "expected_route": "order", "expected_action": "bounded-retry-then-human-handoff"},
+    {"id": "product-off-shelf", "question": "iPhone18 Pro 512G 现在多少钱？", "identity": "user-A", "fixture": "vector hit exists but business SKU is off shelf", "expected_route": "product", "expected_action": "do-not-recommend"},
+    {"id": "product-stale-price", "question": "iPhone18 512G 日租多少钱？", "identity": "user-A", "fixture": "Milvus price differs from current business price", "expected_route": "product", "expected_action": "use-business-price"},
+    {"id": "conversation-focus", "question": "那 256G 呢？", "identity": "user-A", "fixture": "previous turn focused iPhone18 Pro 512G", "expected_route": "product", "expected_action": "keep-model-change-memory"},
+    {"id": "account-switch", "question": "我的订单呢？", "identity": "user-B", "fixture": "same browser previously used by user-A", "expected_route": "order", "expected_action": "do-not-reuse-user-A-state"}
+  ]
+}
