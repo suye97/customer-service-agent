@@ -4,6 +4,12 @@
 
 需要配置 `EMBEDDING_API_KEY`、`LLM_API_KEY`、`SYMBOL_AGENT_MILVUS_URI`、`SYMBOL_AGENT_MILVUS_TOKEN`、`MILVUS_COLLECTION`，并保持 `EMBEDDING_MODEL`/`EMBEDDING_DIMENSION` 与入库时相同。`CHECKPOINT_SQLITE_PATH` 默认是项目下的 `var/checkpoints.sqlite3`，启动时自动创建目录和数据库文件；无需 MySQL。`EMBEDDING_MOCK=1` 无法用于语义检索。商品推荐仅从 Milvus 检索候选中选择，明确型号、容量和日租金条件在模型调用前过滤。
 
+## 最近更新
+
+- 商品型号过滤支持目录中的连写名称（如 `OPPOFindX8Pro`、`AppleiPadAir7`），并区分基础版、Pro、Pro Max、Ultra；`12GB+512GB` 按存储容量 512GB 匹配。见 [`product_matching.py`](product_matching.py) 和回归测试。
+- 新增 [商品评测集与运行说明](evaluation/README.md)：12 条离线候选过滤用例、20 条真实 Embedding + Milvus 检索用例，以及 18 条尚未接入真实业务 Tool 的契约用例。最近一次真实集合快照的最终候选集合为 20/20 完全匹配；原始向量 Recall@10 约 0.839、MRR 为 0.75。结果只适用于该集合快照，不代表线上回答质量。
+- 新增 [Agent 实战面试手册](agent-interview-guide.html)，包含检索指标及 LangChain/LangGraph 实战题。
+
 ## 会话与模拟换单
 
 `POST /api/chat` 接收 `{ "message": "有没有 iPhone18 512G 日租金20以下的商品，也查下我的订单，如果更贵我想退款换单" }`，返回 `answer`、`products`、`orders`、`pending_refund`、`quote` 和 `result`。商品仍从 Milvus 检索；模拟订单从检索到的商品型号、容量和日租金构造，在可用商品数据允许时随机选择四种演示结果：同型号容量但贵 1 元、便宜 1 元、容量不同、型号不同。订单在查订单或提出退款时生成；结果随 LangGraph checkpoint 保存，后续单独提出退款会沿用当前有效订单。用户提出退款时显示确认按钮；有同型号容量且更便宜的商品可模拟退款换单，否则只模拟退款。
